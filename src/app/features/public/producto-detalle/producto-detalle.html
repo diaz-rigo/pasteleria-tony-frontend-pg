@@ -1,0 +1,24 @@
+<main class="mx-auto min-h-[70vh] max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+  <nav class="mb-6 flex flex-wrap items-center gap-2 text-xs text-secondary" aria-label="Ruta de navegación">
+    <a routerLink="/" class="crumb-link">Inicio</a><span aria-hidden="true">/</span><a routerLink="/catalogo" class="crumb-link">Catálogo</a><span aria-hidden="true">/</span><span class="text-primary">{{ producto()?.strProNombre || 'Detalle del producto' }}</span>
+  </nav>
+  @if (store.cargando() && !producto()) {
+    <div class="detail-state">Preparando los detalles del producto…</div>
+  } @else if (!producto()) {
+    <section class="detail-state"><span aria-hidden="true">♡</span><h1>No encontramos este producto</h1><p>Puede que ya no esté disponible en el menú.</p><a routerLink="/catalogo" class="detail-button">Volver al catálogo</a></section>
+  } @else { @if (producto(); as p) {
+    <section class="detail-grid">
+      <div class="detail-photo">@if (store.imagenProducto(p.intProLlave || 0)) { <img [src]="store.imagenProducto(p.intProLlave || 0)" [alt]="p.strProNombre"> } @else { <div class="detail-placeholder"><span>✿</span><small>{{ p.strProNombre }}</small></div> }<span class="detail-status" [class.status-unavailable]="p.strProEstadoDisponibilidad === 'out_of_stock'">{{ disponibilidad(p.strProEstadoDisponibilidad) }}</span>@if (p.blnProDestacado) { <span class="detail-featured">✦ Favorito</span> }</div>
+      <div class="detail-copy"><p class="section-kicker">{{ categoriaNombre(p.intCtgLlave) }} · {{ p.strProMarca || config.config()?.strCfgNombreNegocio || 'Repostería artesanal' }}</p><h1>{{ p.strProNombre }}</h1>
+        @if (rating(p.intProLlave || 0); as opinion) { <p class="detail-rating" aria-label="Calificación del producto"><span>★</span> {{ opinion.promedio | number:'1.1-1' }} <small>({{ opinion.cantidad }} {{ opinion.cantidad === 1 ? 'opinión' : 'opiniones' }})</small></p> }
+        <p class="detail-description">{{ p.strProDescripcion || 'Una receta especial, preparada con cuidado para compartir algo delicioso.' }}</p>
+        @if (p.strProIngredientes) { <div class="detail-section"><h2>Ingredientes</h2><p>{{ p.strProIngredientes }}</p></div> }
+        @if (variantes(p.intProLlave || 0).length) { <div class="detail-section"><h2>Sabores y opciones</h2><div class="variant-list">@for (v of variantes(p.intProLlave || 0); track v.intVarLlave) { <article class="variant-item"><strong>{{ v.strVarSabor || 'Receta clásica' }}</strong>@if(v.strVarDescripcion || v.strVarTextura || v.strVarForma || v.strVarColor){<span>{{ v.strVarDescripcion || detalleVariante(v) }}</span>}</article> }</div></div> }
+        <div class="detail-section"><h2>Tamaños y precios</h2>@if (tallas(p.intProLlave || 0).length) { <div class="size-list">@for (t of tallas(p.intProLlave || 0); track t.intTalLlave) { <div class="size-item"><span>{{ t.decTalMedida }} <small>porción(es)</small></span><strong>{{ t.decTalPrecio | currency:'MXN':'symbol-narrow':'1.0-0' }}</strong></div> }</div> } @else { <p>Consulta las opciones y el precio para tu tamaño.</p> }</div>
+        <div class="detail-actions">@if (whatsappUrl(p.strProNombre); as whatsapp) { <a [href]="whatsapp" target="_blank" rel="noopener noreferrer" class="detail-button">Consultar por WhatsApp <span aria-hidden="true">↗</span></a> } @else if (telefono(); as tel) { <a [href]="'tel:'+tel" class="detail-button">Llamar para consultar</a> }<a routerLink="/catalogo" class="back-link">Seguir explorando</a></div>
+        <p class="order-note">Los pedidos especiales se confirman directamente con la pastelería.</p>
+      </div>
+    </section>
+    @if (relacionados().length) { <section class="related-section"><div class="related-heading"><div><p class="section-kicker">MÁS ANTOJOS</p><h2>También te puede gustar</h2></div><a routerLink="/catalogo" class="back-link">Ver catálogo →</a></div><div class="related-grid">@for (rel of relacionados(); track rel.intProLlave) { <a [routerLink]="['/producto', rel.intProLlave]" class="related-card"><span>{{ categoriaNombre(rel.intCtgLlave) }}</span><strong>{{ rel.strProNombre }}</strong><small>Ver detalles →</small></a> }</div></section> }
+  } }
+</main>

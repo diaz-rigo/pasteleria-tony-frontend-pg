@@ -15,6 +15,9 @@ export class ProductosService {
   listarImagenesVariantes(): Observable<ApiResponse<ImagenVariante[]>> { return this.http.get<ApiResponse<ImagenVariante[]>>(`${environment.apiUrl}/imagenes-variante`); }
   listarTallas(): Observable<ApiResponse<Talla[]>> { return this.http.get<ApiResponse<Talla[]>>(`${environment.apiUrl}/tallas`); }
   listarCalificaciones(): Observable<ApiResponse<Calificacion[]>> { return this.http.get<ApiResponse<Calificacion[]>>(`${environment.apiUrl}/calificaciones`); }
+  crearVariante(data: Partial<VarianteProducto>): Observable<ApiResponse<VarianteProducto>> { return this.http.post<ApiResponse<VarianteProducto>>(`${environment.apiUrl}/variantes-producto`, data); }
+  crearImagenVariante(data: Partial<ImagenVariante>): Observable<ApiResponse<ImagenVariante>> { return this.http.post<ApiResponse<ImagenVariante>>(`${environment.apiUrl}/imagenes-variante`, data); }
+  eliminarImagenVariante(id: number): Observable<ApiResponse<unknown>> { return this.http.delete<ApiResponse<unknown>>(`${environment.apiUrl}/imagenes-variante/${id}`); }
   obtenerPorId(id: number): Observable<ApiResponse<Producto>> { return this.http.get<ApiResponse<Producto>>(`${this.base}/${id}`); }
   crear(data: Partial<Producto>): Observable<ApiResponse<Producto>> { return this.http.post<ApiResponse<Producto>>(this.base, data); }
   actualizar(id: number, data: Partial<Producto>): Observable<ApiResponse<Producto>> { return this.http.put<ApiResponse<Producto>>(`${this.base}/${id}`, data); }

@@ -1,0 +1,20 @@
+<section class="variant-manager" aria-labelledby="variant-manager-title">
+  <div class="variant-manager-heading"><div><span class="variant-eyebrow">CONTENIDO VISUAL</span><h3 id="variant-manager-title">Variantes e imágenes</h3><p>Organiza los sabores y agrega las fotografías asociadas a cada variante.</p></div><button type="button" (click)="agregandoVariante=!agregandoVariante" class="admin-btn admin-btn-secondary">{{agregandoVariante?'Cerrar':'＋ Nueva variante'}}</button></div>
+  @if (agregandoVariante) {
+    <form class="variant-form" (ngSubmit)="crearVariante()"><div class="variant-form-grid">
+      <label><span class="admin-label">Sabor *</span><input name="sabor" [(ngModel)]="sabor" required class="admin-input" placeholder="Chocolate"></label>
+      <label><span class="admin-label">Color *</span><input name="color" [(ngModel)]="color" required class="admin-input" placeholder="Café"></label>
+      <label><span class="admin-label">Textura *</span><input name="textura" [(ngModel)]="textura" required class="admin-input" placeholder="Esponjosa"></label>
+      <label><span class="admin-label">Forma *</span><input name="forma" [(ngModel)]="forma" required class="admin-input" placeholder="Redonda"></label>
+      <label class="variant-form-wide"><span class="admin-label">Descripción opcional</span><input name="descripcion" [(ngModel)]="descripcion" class="admin-input" placeholder="Detalle o cobertura"></label>
+      <label class="variant-form-wide"><span class="admin-label">URL de imagen opcional</span><input name="urlNuevaVariante" [(ngModel)]="urlImagen[-1]" type="url" inputmode="url" class="admin-input" placeholder="https://..." autocomplete="url"></label>
+    </div><div class="variant-form-actions"><button type="submit" class="admin-btn admin-btn-primary">Guardar variante</button></div></form>
+  }
+  @if (!variantes().length) { <div class="variant-empty"><span aria-hidden="true">✦</span><p>Aún no hay variantes. Agrega el primer sabor para asignarle imágenes y opciones.</p></div> }
+  <div class="variant-cards">@for (variant of variantes(); track variant.intVarLlave) {
+    <article class="variant-card"><div class="variant-card-heading"><div><h4>{{nombreVariante(variant)}}</h4><p>{{variant.strVarTextura}} · {{variant.strVarColor}} · {{variant.strVarForma}}</p></div><span class="admin-badge" [class.admin-badge-active]="variant.strVarEstadoDisponibilidad==='available'">{{variant.strVarEstadoDisponibilidad==='available'?'Disponible':variant.strVarEstadoDisponibilidad==='on_demand'?'Sobre pedido':'Agotada'}}</span></div>
+      @if (imagenes(variant.intVarLlave || 0).length) { <div class="variant-image-grid">@for(image of imagenes(variant.intVarLlave || 0);track image.intImaLlave){<div class="variant-image-item"><img [src]="image.strImaUrl" [alt]="'Imagen de '+nombreVariante(variant)" loading="lazy"><button type="button" class="variant-image-remove" (click)="store.eliminarImagenVariante(image.intImaLlave!)" [attr.aria-label]="'Eliminar imagen de '+nombreVariante(variant)">×</button></div>}</div> } @else { <p class="variant-no-images">Esta variante todavía no tiene imágenes.</p> }
+      <form class="variant-image-form" (ngSubmit)="agregarImagen(variant)"><label class="flex-1"><span class="admin-label">Agregar imagen por URL</span><input [name]="'url-'+variant.intVarLlave" [(ngModel)]="urlImagen[variant.intVarLlave || 0]" type="url" inputmode="url" required class="admin-input" placeholder="https://..." autocomplete="url"></label><button type="submit" class="admin-btn admin-btn-secondary">Agregar imagen</button></form>
+    </article>
+  }</div>
+</section>

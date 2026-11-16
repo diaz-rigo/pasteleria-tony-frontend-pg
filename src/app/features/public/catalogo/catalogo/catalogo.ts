@@ -3,8 +3,9 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProductosStore } from '../../../../store/productos/productos.store';
 import { LucideSearch } from '@lucide/angular';
+import { RouterLink } from '@angular/router';
 
-@Component({ selector:'app-catalogo', imports:[FormsModule,LucideSearch,CurrencyPipe,DecimalPipe], templateUrl:'./catalogo.html', styleUrl:'./catalogo.css' })
+@Component({ selector:'app-catalogo', imports:[FormsModule,LucideSearch,CurrencyPipe,DecimalPipe,RouterLink], templateUrl:'./catalogo.html', styleUrl:'./catalogo.css' })
 export class Catalogo implements OnInit {
   readonly store=inject(ProductosStore);
   readonly busqueda=signal('');

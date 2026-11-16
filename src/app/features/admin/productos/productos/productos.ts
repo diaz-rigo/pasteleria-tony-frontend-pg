@@ -4,10 +4,11 @@ import { CategoriasStore } from '../../../../store/categorias/categorias.store';
 import { ProductoList } from '../producto-list/producto-list';
 import { ProductoForm } from '../producto-form/producto-form';
 import { Producto } from '../../../../models/producto.model';
+import { ProductoVarianteImagen } from '../producto-variante-imagen/producto-variante-imagen';
 
 @Component({
   selector: 'app-productos',
-  imports: [ProductoList, ProductoForm],
+  imports: [ProductoList, ProductoForm, ProductoVarianteImagen],
   templateUrl: './productos.html',
   styleUrl: './productos.css',
 })
@@ -29,7 +30,9 @@ export class Productos implements OnInit {
     if (this.seleccionado?.intProLlave) {
       this.store.actualizar(this.seleccionado.intProLlave, data, () => this.cerrarForm());
     } else {
-      this.store.crear(data, () => this.cerrarForm());
+      this.store.crear(data, producto => {
+        if (producto) { this.seleccionado = producto; this.mostrarForm = true; this.vistaMovil.set('formulario'); }
+      });
     }
   }
 }

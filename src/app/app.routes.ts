@@ -13,6 +13,10 @@ export const routes: Routes = [
     path: 'catalogo',
     loadComponent: () => import('./features/public/catalogo/catalogo/catalogo').then(m => m.Catalogo),
   },
+  {
+    path: 'producto/:id',
+    loadComponent: () => import('./features/public/producto-detalle/producto-detalle').then(m => m.ProductoDetalle),
+  },
   { path: 'productos', redirectTo: 'catalogo', pathMatch: 'full' },
   {
     path: 'galeria',

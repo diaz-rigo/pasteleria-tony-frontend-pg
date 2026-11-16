@@ -77,10 +77,30 @@ export class ProductosStore {
       error: () => { this.cargando.set(false); },
     });
   }
-  crear(data: Partial<Producto>, onDone?: () => void): void {
+  crear(data: Partial<Producto>, onDone?: (producto?: Producto) => void): void {
     this.http.crear(data).subscribe({
-      next: (res) => { if (res.ok) { this.toast.success(res.mensaje || 'Creado'); this.cargar(); onDone?.(); } else this.toast.error(res.mensaje || 'Error'); },
+      next: (res) => { if (res.ok) { this.toast.success(res.mensaje || 'Creado'); this.cargar(); onDone?.(res.data); } else this.toast.error(res.mensaje || 'Error'); },
       error: () => this.toast.error('Error al crear producto'),
+    });
+  }
+  crearVariante(data: Partial<VarianteProducto>, onDone?: (variante?: VarianteProducto) => void): void {
+    this.http.crearVariante(data).subscribe({
+      next: res => { if (res.ok && res.data) { this.variantes.update(items => [...items, res.data!]); this.toast.success('Variante agregada'); onDone?.(res.data); } else this.toast.error(res.mensaje || 'No se pudo agregar la variante'); },
+      error: () => this.toast.error('Error al agregar la variante'),
+    });
+  }
+  crearImagenVariante(data: Partial<ImagenVariante>, onDone?: () => void): void {
+    this.http.crearImagenVariante(data).subscribe({
+      next: res => { if (res.ok && res.data) { this.imagenes.update(items => [...items, res.data!]); this.toast.success('Imagen agregada'); onDone?.(); } else this.toast.error(res.mensaje || 'No se pudo agregar la imagen'); },
+      error: () => this.toast.error('Error al agregar la imagen'),
+    });
+  }
+  async eliminarImagenVariante(id: number): Promise<void> {
+    const ok = await this.confirm.confirmar('¿Eliminar esta imagen de la variante?');
+    if (!ok) return;
+    this.http.eliminarImagenVariante(id).subscribe({
+      next: res => { if (res.ok) { this.imagenes.update(items => items.filter(item => item.intImaLlave !== id)); this.toast.success('Imagen eliminada'); } else this.toast.error(res.mensaje || 'No se pudo eliminar la imagen'); },
+      error: () => this.toast.error('Error al eliminar la imagen'),
     });
   }
   actualizar(id: number, data: Partial<Producto>, onDone?: () => void): void {
