@@ -1,0 +1,20 @@
+<main class="mx-auto min-h-[70vh] max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+  <header class="mb-7 max-w-xl"><span class="section-kicker">UN POCO DE INSPIRACIÓN</span><h1 class="mt-2 text-4xl sm:text-5xl">Nuestra galería</h1><p class="mt-3 text-sm leading-6 text-secondary">Momentos dulces, detalles hechos a mano y sabores que se quedan contigo.</p></header>
+  @if (store.cargando()) { <div class="public-empty"><span>✦</span><p>Cargando inspiración…</p></div> }
+  @else if (store.error()) { <div class="public-empty"><span>☁</span><strong>No pudimos cargar la galería</strong><p>Revisa tu conexión e inténtalo de nuevo.</p><button class="retry-button" (click)="store.cargar()">Intentar de nuevo</button></div> }
+  @else {
+    <div class="gallery-grid">
+      @for (g of galeriasPublicas(); track g.intGalLlave) {
+        <article class="gallery-card">
+          <div class="gallery-photo">
+            @if (store.imagenesDe(g.intGalLlave || 0)[0]; as portada) { <img [src]="portada.strImgUrl" [alt]="portada.strImgLeyenda || g.strGalTitulo" loading="lazy"> }
+            @else { <div class="gallery-image-placeholder" aria-hidden="true">✿</div> }
+            @if(g.blnGalDestacado){<span class="gallery-badge">Destacado</span>}
+          </div>
+          <div class="gallery-caption"><div><h2>{{g.strGalTitulo}}</h2><p>{{g.strGalDescripcion||g.strGalSaborRelacionado||'Un detalle dulce para compartir.'}}</p><div class="gallery-tags">@for(categoria of store.categoriasDe(g.intGalLlave||0);track categoria.intGctLlave){<span>{{categoria.strGctNombre}}</span>}@for(etiqueta of store.etiquetasDe(g.intGalLlave||0);track etiqueta.intEtiLlave){<span>#{{etiqueta.strEtiNombre}}</span>}</div></div></div>
+          @if (store.imagenesDe(g.intGalLlave || 0).length > 1) { <div class="gallery-thumbnails" aria-label="Más imágenes de esta galería">@for (imagen of store.imagenesDe(g.intGalLlave || 0).slice(1); track imagen.intImgLlave) { <img [src]="imagen.strImgUrl" [alt]="imagen.strImgLeyenda || g.strGalTitulo" loading="lazy"> }</div> }
+        </article>
+      } @empty { <div class="public-empty"><span>♡</span><strong>Estamos preparando la galería</strong><p>Muy pronto compartiremos más momentos dulces.</p></div> }
+    </div>
+  }
+</main>

@@ -1,0 +1,1 @@
+export interface Pedido { intPedLlave?: number; strPedCodigo?: string; strPedNombreCliente: string; strPedTelefonoCliente: string; strPedEmailCliente: string; strPedMetodoEntrega: 'RECOGER' | 'DOMICILIO'; dtPedFechaEntrega: string; strPedHoraEntrega?: string; strPedModo: 'APARTAR' | 'PEDIR'; strPedEstado?: string; decPedTotal?: number; }

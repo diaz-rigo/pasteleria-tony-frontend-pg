@@ -1,0 +1,12 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5">
+  <label class="sm:col-span-2"><span class="admin-label">Correo electrónico</span><input type="email" autocomplete="email" formControlName="strUsuEmail" class="admin-input" placeholder="nombre@dominio.com"></label>
+  <label class="sm:col-span-2"><span class="admin-label">{{usuario?'Nueva contraseña (opcional)':'Contraseña'}}</span><input type="password" [autocomplete]="usuario?'new-password':'new-password'" formControlName="strUsuPassword" class="admin-input" placeholder="Mínimo 8 caracteres"></label>
+  <label><span class="admin-label">Nombre</span><input autocomplete="given-name" formControlName="strUsuNombre" class="admin-input"></label>
+  <label><span class="admin-label">Apellido paterno</span><input autocomplete="family-name" formControlName="strUsuApellidoPaterno" class="admin-input"></label>
+  <label><span class="admin-label">Apellido materno</span><input formControlName="strUsuApellidoMaterno" class="admin-input"></label>
+  <label><span class="admin-label">Teléfono</span><input type="tel" autocomplete="tel" formControlName="strUsuTelefono" class="admin-input"></label>
+  <label><span class="admin-label">Rol</span><select formControlName="strUsuRol" class="admin-input"><option value="CLIENT">Cliente</option><option value="ADMIN">Administrador</option></select></label>
+  <label><span class="admin-label">Estado</span><select formControlName="strUsuEstado" class="admin-input"><option value="ACTIVE">Activo</option><option value="INACTIVE">Inactivo</option></select></label>
+  @if(form.invalid&&form.touched){<p class="sm:col-span-2 text-xs font-medium text-red-700" role="alert">Revisa los campos obligatorios antes de guardar.</p>}
+  <div class="flex flex-col-reverse gap-2 sm:col-span-2 sm:flex-row sm:justify-end"><button type="button" (click)="cancelar.emit()" class="admin-btn admin-btn-secondary">Cancelar</button><button type="submit" [disabled]="form.invalid" class="admin-btn admin-btn-primary disabled:cursor-not-allowed disabled:opacity-50">Guardar usuario</button></div>
+</form>

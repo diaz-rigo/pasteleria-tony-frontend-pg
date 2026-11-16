@@ -1,0 +1,2 @@
+:host{display:block;min-height:100dvh}.footer-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-primary)}.footer-link{color:var(--text-secondary);transition:color .15s}.footer-link:hover{color:var(--accent)}.footer-chip{border:1px solid var(--line);border-radius:999px;padding:5px 10px;color:var(--text-secondary);transition:.15s}.footer-chip:hover{border-color:var(--accent);color:var(--accent)}
+

@@ -1,0 +1,1 @@
+export interface Galeria { intGalLlave?: number; strGalTitulo: string; strGalDescripcion?: string; blnGalActivo?: boolean; blnGalDestacado?: boolean; intProLlave?: number; strGalSaborRelacionado?: string; }

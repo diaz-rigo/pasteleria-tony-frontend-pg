@@ -1,0 +1,10 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5">
+  <label class="sm:col-span-2"><span class="admin-label">Nombre del producto</span><input formControlName="strProNombre" class="admin-input" placeholder="Ej. Pastel de chocolate"></label>
+  <label><span class="admin-label">Marca</span><input formControlName="strProMarca" class="admin-input" placeholder="Marca o línea"></label>
+  <label><span class="admin-label">Categoría</span><select formControlName="intCtgLlave" class="admin-input"><option [value]="0">Selecciona una categoría</option>@for(c of categorias;track c.intCtgLlave){<option [value]="c.intCtgLlave">{{c.strCtgNombre}}</option>}</select></label>
+  <label><span class="admin-label">Disponibilidad</span><select formControlName="strProEstadoDisponibilidad" class="admin-input"><option value="available">Disponible</option><option value="on_demand">Sobre pedido</option><option value="out_of_stock">Agotado</option></select></label>
+  <label class="flex min-h-11 items-center gap-2 self-end text-sm text-primary"><input type="checkbox" formControlName="blnProDestacado" class="h-4 w-4 accent-[var(--accent)]"><span>Mostrar como destacado</span></label>
+  <label class="sm:col-span-2"><span class="admin-label">Ingredientes</span><textarea formControlName="strProIngredientes" rows="3" class="admin-input" placeholder="Ingredientes principales"></textarea></label>
+  <label class="sm:col-span-2"><span class="admin-label">Descripción para el catálogo</span><textarea formControlName="strProDescripcion" rows="3" class="admin-input" placeholder="Describe el producto"></textarea></label>
+  <div class="flex flex-col-reverse gap-2 sm:col-span-2 sm:flex-row sm:justify-end"><button type="button" (click)="cancelar.emit()" class="admin-btn admin-btn-secondary">Cancelar</button><button type="submit" [disabled]="form.invalid" class="admin-btn admin-btn-primary disabled:cursor-not-allowed disabled:opacity-50">Guardar producto</button></div>
+</form>

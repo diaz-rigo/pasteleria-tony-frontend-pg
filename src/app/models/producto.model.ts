@@ -1,0 +1,1 @@
+export interface Producto { intProLlave?: number; strProNombre: string; strProMarca?: string; intCtgLlave: number; strProIngredientes: string; strProDescripcion?: string; blnProDestacado?: boolean; strProEstadoDisponibilidad?: string; decProCalificacionPromedio?: number; }

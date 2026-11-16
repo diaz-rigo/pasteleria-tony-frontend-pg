@@ -1,0 +1,36 @@
+<main>
+  <section class="hero-wrap">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-[.92fr_1.08fr] lg:px-8 lg:py-20">
+      <div class="relative z-10 order-2 lg:order-1">
+        <span class="eyebrow"><span class="h-1.5 w-1.5 rounded-full" style="background:var(--accent)"></span> Repostería artesanal · Hecha a tu gusto</span>
+        @if(config.config()?.blnCfgMostrarTituloHero !== false){<h1 class="mt-5 max-w-xl text-[clamp(2.7rem,7vw,5.25rem)] leading-[1.03] tracking-[-.045em]">{{ config.config()?.strCfgTituloHero || 'Un detalle dulce cambia cualquier día.' }}</h1>}
+        @if(config.config()?.blnCfgMostrarSubtituloHero !== false){<p class="mt-5 max-w-md text-base leading-7 text-secondary sm:text-lg">{{ config.config()?.strCfgSubtituloHero || 'Pasteles y postres preparados con ingredientes frescos, recetas de casa y mucho cariño.' }}</p>}
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+          @if(config.config()?.blnCfgMostrarBotonHero !== false){<a [routerLink]="heroButtonInternal()?heroButtonUrl():null" [href]="heroButtonInternal()?null:heroButtonUrl()" [target]="heroButtonInternal()?'_self':'_blank'" rel="noopener noreferrer" class="primary-cta">{{ config.config()?.strCfgTextoBotonHero || 'Descubrir el menú' }} <span aria-hidden="true">→</span></a>}
+          <a routerLink="/galeria" class="secondary-cta">Conoce nuestro trabajo</a>
+        </div>
+        <div class="mt-8 flex items-center gap-3 text-xs text-secondary"><span class="flex -space-x-2"><span class="avatar-dot">✦</span><span class="avatar-dot">♡</span><span class="avatar-dot">✿</span></span><span><strong class="text-primary">Hecho al momento</strong><br>para celebrar contigo</span></div>
+      </div>
+      @if(config.config()?.blnCfgMostrarImagenHero !== false){<div class="hero-art order-1 lg:order-2">
+        @if(config.config()?.strCfgUrlImagenHero){<img [src]="config.config()?.strCfgUrlImagenHero" [alt]="config.config()?.strCfgNombreNegocio || 'Creación de repostería'" fetchpriority="high" />}@else{<div class="hero-illustration"><span class="hero-cake-icon"><svg lucideCakeSlice [size]="86" [strokeWidth]="1.15"></svg></span><div class="hero-illustration-copy"><span>Hecho con cariño</span><strong>Un sabor para recordar</strong></div></div>}
+        <div class="photo-note"><span class="note-icon">✦</span><span><strong>Momentos para saborear</strong><small>Una receta para cada ocasión</small></span></div>
+        <span class="art-sparkle sparkle-one">✳</span><span class="art-sparkle sparkle-two">✦</span>
+      </div>}
+    </div>
+  </section>
+  <section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <div class="section-heading"><div><span class="section-kicker">PARA ANTOJARTE</span><h2 class="mt-2 text-3xl sm:text-4xl">Delicias de nuestra cocina</h2><p class="mt-2 text-sm text-secondary">Encuentra algo rico para compartir.</p></div><a routerLink="/catalogo" class="text-sm font-semibold" style="color:var(--accent)">Ver todo el menú <span aria-hidden="true">↗</span></a></div>
+    @if (productos.cargando()) { <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">@for (s of [1,2,3,4]; track s) { <div class="skeleton-card"></div> }</div> }
+    @else {
+      <div class="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+        @for (p of productos.productos().slice(0,4); track p.intProLlave) {
+          <article class="product-card">
+            <a routerLink="/catalogo" class="product-photo" [attr.aria-label]="'Ver ' + p.strProNombre">@if(productImage(p.intProLlave || 0)){<img [src]="productImage(p.intProLlave || 0)" [alt]="p.strProNombre" loading="lazy">}@else{<span class="image-placeholder" aria-hidden="true">✿</span>}@if(p.blnProDestacado){<span class="product-tag">Destacado</span>}</a>
+            <div class="p-3.5 sm:p-4"><p class="text-[10px] uppercase tracking-[.15em] text-secondary">{{ categoriaNombre(p.intCtgLlave) || p.strProMarca || 'Repostería Tony' }}</p><h3 class="mt-1 truncate text-base font-semibold sm:text-lg">{{ p.strProNombre }}</h3><p class="mt-1 line-clamp-2 text-xs leading-5 text-secondary">{{ p.strProDescripcion || 'Elaborado con ingredientes frescos y una receta especial.' }}</p>@if(precioDesde(p.intProLlave || 0); as precio){<p class="mt-2 text-sm font-semibold" style="color:var(--accent)">{{ precio | currency:'MXN':'symbol-narrow':'1.0-0' }} <span class="text-[10px] font-normal text-secondary">desde</span></p>}</div>
+          </article>
+        } @empty { <div class="col-span-full rounded-2xl border border-dashed p-8 text-center text-sm text-secondary" style="border-color:var(--line)">Pronto encontrarás aquí nuestros productos favoritos.</div> }
+      </div>
+    }
+  </section>
+  <section class="story-band"><div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-3 lg:px-8"><div class="story-item"><span>01</span><div><strong>Ingredientes frescos</strong><p>Elegimos cada ingrediente con cuidado.</p></div></div><div class="story-item"><span>02</span><div><strong>Hecho para compartir</strong><p>Detalles que reúnen a quienes más quieres.</p></div></div><div class="story-item"><span>03</span><div><strong>Tu ocasión, tu sabor</strong><p>Ideas dulces para celebrar a tu manera.</p></div></div></div></section>
+</main>

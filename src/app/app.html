@@ -1,0 +1,32 @@
+@if (!enAdministracion()) { <app-header /> }
+<router-outlet />
+@if (!enAdministracion()) {
+<footer class="border-t px-4 py-8 text-xs text-secondary sm:px-6 lg:px-8" [style.background-color]="config.config()?.strCfgColorFondoPie || null" style="border-color:var(--line);padding-bottom:calc(2rem + env(safe-area-inset-bottom))">
+  <div class="mx-auto grid max-w-7xl gap-7 sm:grid-cols-2 lg:grid-cols-5">
+    <section><h2 class="font-display text-lg font-semibold text-primary">{{ config.config()?.strCfgNombreNegocio || 'Pastelería Tony' }}</h2><p class="mt-2 max-w-xs leading-5">{{ footerText || 'Hecho con cariño, para compartir.' }}</p><div class="mt-4 flex flex-wrap gap-2">@for(red of config.redes();track red.intRedLlave){<a class="footer-chip" [href]="red.strRedUrl" target="_blank" rel="noopener noreferrer">{{red.strRedPlataforma}}</a>}</div></section>
+    @if(config.config()?.strCfgCalle || config.config()?.strCfgCiudad || config.config()?.strCfgUrlMapa){<section><h3 class="footer-title">Visítanos</h3>@if(config.config();as negocio){<address class="mt-2 not-italic leading-5">{{negocio.strCfgCalle}}<br>{{negocio.strCfgCiudad}}{{negocio.strCfgEstado ? ', '+negocio.strCfgEstado : ''}} {{negocio.strCfgCodigoPostal}}<br>{{negocio.strCfgPais}}</address>@if(negocio.strCfgUrlMapa){<a class="footer-link mt-2 inline-block" [href]="negocio.strCfgUrlMapa" target="_blank" rel="noopener noreferrer">Cómo llegar ↗</a>}}</section>}
+    @if(config.telefonos().length || config.emails().length){<section><h3 class="footer-title">Contacto</h3><div class="mt-2 flex flex-col items-start gap-2">@for(telefono of config.telefonos();track telefono.intTelLlave){@if(telefono.strTelNumero){<a class="footer-link" [href]="'tel:'+telefono.strTelNumero">{{telefono.strTelTipo || 'Teléfono'}} · {{telefono.strTelNumero}}</a>}}@for(email of config.emails();track email.intEmaLlave){<a class="footer-link" [href]="'mailto:'+email.strEmaDireccion">{{email.strEmaDireccion}}</a>}</div></section>}
+    @if(config.horarios().length){<section><h3 class="footer-title">Horario</h3><div class="mt-2 flex flex-col gap-2">@for(horario of config.horarios();track horario.intHorLlave){<div><span class="block text-primary">{{horario.strHorDias}}</span><span>{{horario.strHorHoras}}</span></div>}</div></section>}
+    @if(config.enlaces().length){<section><h3 class="footer-title">Explora</h3><div class="mt-2 flex flex-col items-start gap-2">@for(enlace of config.enlaces();track enlace.intEnlLlave){<a class="footer-link" [href]="enlace.strEnlUrl">{{enlace.strEnlTexto}}</a>}</div></section>}
+  </div>
+  <div class="mx-auto mt-7 max-w-7xl border-t pt-5 text-center" style="border-color:var(--line)">© {{currentYear}} {{config.config()?.strCfgNombreNegocio || 'Pastelería Tony'}}. Todos los derechos reservados.</div>
+</footer>
+}
+
+<div class="toast-stack" aria-live="polite" aria-relevant="additions text">
+  @for (t of toast.toasts(); track t.id) {
+    <div class="toast-card" [class.toast-success]="t.tipo==='success'" [class.toast-error]="t.tipo==='error'" [class.toast-info]="t.tipo==='info'" [attr.role]="t.tipo==='error'?'alert':'status'">
+      <span class="toast-mark" aria-hidden="true">{{t.tipo==='success'?'✓':t.tipo==='error'?'!':'i'}}</span><p class="toast-message">{{t.mensaje}}</p><button type="button" (click)="toast.cerrar(t.id)" class="toast-close" aria-label="Cerrar notificación">×</button>
+    </div>
+  }
+</div>
+
+<!-- Confirm dialog -->
+@if (confirm.visible()) {
+  <div class="dialog-backdrop" role="presentation" (click)="confirm.cancelar()">
+    <section class="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message" (click)="$event.stopPropagation()">
+      <span class="confirm-icon" aria-hidden="true">!</span><h2 id="confirm-title">Confirma esta acción</h2><p id="confirm-message">{{confirm.mensaje()}}</p>
+      <div class="confirm-actions"><button type="button" (click)="confirm.cancelar()" class="admin-btn admin-btn-secondary">Cancelar</button><button type="button" (click)="confirm.aceptar()" class="admin-btn admin-btn-danger">Confirmar</button></div>
+    </section>
+  </div>
+}

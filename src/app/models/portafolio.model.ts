@@ -1,0 +1,1 @@
+export interface Portafolio { intPorLlave?: number; strPorUrlImagen: string; strPorTitulo?: string; strPorDescripcion?: string; strPorTipoEvento?: string; strPorTipoProducto?: string; blnPorDestacado?: boolean; }

@@ -1,0 +1,4 @@
+<section class="admin-page">
+  <header class="admin-page-heading"><div><h1 class="admin-page-title">Pedidos</h1><p class="admin-page-description">Consulta las solicitudes y su estado de entrega.</p></div><span class="admin-badge">{{store.pedidos().length}} pedidos</span></header>
+  <div class="admin-card"><app-pedido-list [pedidos]="store.pedidos()" [cargando]="store.cargando()" (eliminar)="store.eliminar($event)" /></div>
+</section>
