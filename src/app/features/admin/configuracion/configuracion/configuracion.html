@@ -27,9 +27,11 @@
 		<label><span class="admin-label">Código postal</span><input formControlName="strCfgCodigoPostal" class="admin-input"></label>
 		<label><span class="admin-label">País</span><input formControlName="strCfgPais" class="admin-input"></label>
 		<label class="sm:col-span-2"><span class="admin-label">Enlace de mapa</span><input formControlName="strCfgUrlMapa" type="url" class="admin-input" placeholder="https://maps.google.com/..."></label>
+		<h2 class="admin-card-title sm:col-span-2 sm:mt-2">WhatsApp de contacto</h2>
+		<label class="sm:col-span-2"><span class="admin-label">Número para recibir mensajes</span><input formControlName="strTelNumero" type="tel" autocomplete="tel" inputmode="tel" class="admin-input" placeholder="+52 55 1234 5678"><small class="text-xs text-secondary">Incluye el código de país. Este número recibirá los mensajes de contacto de los productos.</small>@if(form.controls.strTelNumero.touched&&form.controls.strTelNumero.invalid){<small class="text-xs text-red-600">Escribe un número válido de 10 a 20 caracteres.</small>}</label>
 		<h2 class="admin-card-title sm:col-span-2 sm:mt-2">Buscadores</h2>
 		<label class="sm:col-span-2"><span class="admin-label">Título meta</span><input formControlName="strCfgTituloMeta" class="admin-input"></label>
 		<label class="sm:col-span-2"><span class="admin-label">Descripción meta</span><textarea formControlName="strCfgDescripcionMeta" rows="3" class="admin-input"></textarea></label>
-		<div class="flex flex-col-reverse gap-2 border-t pt-4 sm:col-span-2 sm:flex-row sm:justify-end" style="border-color:var(--line)"><button type="button" (click)="form.reset(store.config() || {});archivoLogo=null;archivoHero=null" [disabled]="guardando" class="admin-btn admin-btn-secondary"><svg lucideUndo2 [size]="16"></svg>Descartar cambios</button><button type="submit" [disabled]="guardando" class="admin-btn admin-btn-primary"><svg lucideSave [size]="16"></svg>{{guardando?'Subiendo imágenes…':'Guardar configuración'}}</button></div>
+		<div class="flex flex-col-reverse gap-2 border-t pt-4 sm:col-span-2 sm:flex-row sm:justify-end" style="border-color:var(--line)"><button type="button" (click)="descartarCambios()" [disabled]="guardando" class="admin-btn admin-btn-secondary"><svg lucideUndo2 [size]="16"></svg>Descartar cambios</button><button type="submit" [disabled]="guardando" class="admin-btn admin-btn-primary"><svg lucideSave [size]="16"></svg>{{guardando?'Subiendo imágenes…':'Guardar configuración'}}</button></div>
 	</form>
 </section>

@@ -64,4 +64,34 @@ export class ConfiguracionStore {
       });
     }
   }
+
+  guardarTelefonoWhatsApp(numero: string, onDone?: () => void): void {
+    const configId = this.config()?.intCfgLlave;
+    if (!configId) { this.toast.error('Guarda primero la configuración del negocio.'); return; }
+    const actual = this.telefonos().find(telefono => telefono.intCfgLlave === configId && telefono.blnTelPrincipal)
+      || this.telefonos().find(telefono => telefono.intCfgLlave === configId);
+    if (!numero.trim() && !actual) { onDone?.(); return; }
+    const data: Partial<TelefonoConfiguracion> = {
+      intCfgLlave: configId,
+      strTelTipo: 'whatsapp',
+      strTelNumero: numero.trim(),
+      blnTelPrincipal: true,
+    };
+    const request = actual?.intTelLlave
+      ? this.http.actualizarTelefono(actual.intTelLlave, data)
+      : this.http.crearTelefono(data);
+    request.subscribe({
+      next: respuesta => {
+        if (!respuesta.ok || !respuesta.data) { this.toast.error(respuesta.mensaje || 'No se pudo guardar el teléfono de WhatsApp.'); return; }
+        this.telefonos.update(telefonos => [
+          ...telefonos.filter(telefono => telefono.intTelLlave !== respuesta.data!.intTelLlave)
+            .map(telefono => telefono.intCfgLlave === configId ? { ...telefono, blnTelPrincipal: false } : telefono),
+          respuesta.data!,
+        ]);
+        this.toast.success('Número de WhatsApp actualizado.');
+        onDone?.();
+      },
+      error: () => this.toast.error('No se pudo guardar el teléfono de WhatsApp.'),
+    });
+  }
 }

@@ -12,6 +12,8 @@ export class ConfiguracionService {
   private base = `${environment.apiUrl}/configuracion`;
   listar(): Observable<ApiResponse<Configuracion[]>> { return this.http.get<ApiResponse<Configuracion[]>>(this.base); }
   listarTelefonos(): Observable<ApiResponse<TelefonoConfiguracion[]>> { return this.http.get<ApiResponse<TelefonoConfiguracion[]>>(`${environment.apiUrl}/telefonos-configuracion`); }
+  crearTelefono(data: Partial<TelefonoConfiguracion>): Observable<ApiResponse<TelefonoConfiguracion>> { return this.http.post<ApiResponse<TelefonoConfiguracion>>(`${environment.apiUrl}/telefonos-configuracion`, data); }
+  actualizarTelefono(id: number, data: Partial<TelefonoConfiguracion>): Observable<ApiResponse<TelefonoConfiguracion>> { return this.http.put<ApiResponse<TelefonoConfiguracion>>(`${environment.apiUrl}/telefonos-configuracion/${id}`, data); }
   listarEmails(): Observable<ApiResponse<EmailConfiguracion[]>> { return this.http.get<ApiResponse<EmailConfiguracion[]>>(`${environment.apiUrl}/emails-configuracion`); }
   listarHorarios(): Observable<ApiResponse<HorarioConfiguracion[]>> { return this.http.get<ApiResponse<HorarioConfiguracion[]>>(`${environment.apiUrl}/horarios-configuracion`); }
   listarRedes(): Observable<ApiResponse<RedSocialConfiguracion[]>> { return this.http.get<ApiResponse<RedSocialConfiguracion[]>>(`${environment.apiUrl}/redes-sociales-configuracion`); }

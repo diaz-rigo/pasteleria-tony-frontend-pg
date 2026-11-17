@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ConfiguracionStore } from '../../../../store/configuracion/configuracion.store';
 import { Configuracion } from '../../../../models/configuracion.model';
 import { LucideSave, LucideUndo2 } from '@lucide/angular';
@@ -42,6 +42,7 @@ export class ConfiguracionAdmin implements OnInit {
     strCfgCodigoPostal: [''],
     strCfgPais: [''],
     strCfgUrlMapa: [''],
+    strTelNumero: ['', Validators.pattern(/^[+0-9().\s-]{10,20}$/)],
     strCfgTituloMeta: [''],
     strCfgDescripcionMeta: [''],
   });
@@ -49,6 +50,12 @@ export class ConfiguracionAdmin implements OnInit {
   private readonly sincronizarFormulario = effect(() => {
     const configuracion = this.store.config();
     if (configuracion) this.form.patchValue(configuracion);
+  });
+  private readonly sincronizarTelefono = effect(() => {
+    const configId = this.store.config()?.intCfgLlave;
+    const telefono = this.store.telefonos().find(item => item.intCfgLlave === configId && item.blnTelPrincipal)
+      || this.store.telefonos().find(item => item.intCfgLlave === configId);
+    this.form.controls.strTelNumero.setValue(telefono?.strTelNumero || '', { emitEvent: false });
   });
 
   ngOnInit(): void {
@@ -59,15 +66,27 @@ export class ConfiguracionAdmin implements OnInit {
     void this.guardarConfiguracion();
   }
 
+  descartarCambios(): void {
+    const configId = this.store.config()?.intCfgLlave;
+    const telefono = this.store.telefonos().find(item => item.intCfgLlave === configId && item.blnTelPrincipal)
+      || this.store.telefonos().find(item => item.intCfgLlave === configId);
+    this.form.reset({ ...this.store.config(), strTelNumero: telefono?.strTelNumero || '' });
+    this.archivoLogo = null;
+    this.archivoHero = null;
+  }
+
   async guardarConfiguracion():Promise<void> {
     if(this.guardando)return;
+    if(this.form.invalid){this.form.markAllAsTouched();return;}
     this.guardando=true;
     try {
       const datos=this.form.getRawValue();
+      const numeroWhatsApp=datos.strTelNumero;
+      delete (datos as Partial<typeof datos>).strTelNumero;
       if(this.archivoLogo)datos.strCfgUrlLogo=await this.subidaImagen.subir(this.archivoLogo,'configuracion');
       if(this.archivoHero)datos.strCfgUrlImagenHero=await this.subidaImagen.subir(this.archivoHero,'configuracion');
       this.form.patchValue(datos);
-      this.store.guardar(datos,()=>{this.archivoLogo=null;this.archivoHero=null;});
+      this.store.guardar(datos,()=>this.store.guardarTelefonoWhatsApp(numeroWhatsApp,()=>{this.archivoLogo=null;this.archivoHero=null;}));
     } catch(error) { this.toast.error(error instanceof Error?error.message:'No se pudieron subir las imágenes.'); }
     finally { this.guardando=false; }
   }
