@@ -9,6 +9,7 @@ import { Header } from './shared/layout/header/header';
 import { ConfiguracionStore } from './store/configuracion/configuracion.store';
 import { ThemeService } from './core/theme/theme.service';
 import { CloudinaryImagePipe } from './shared/pipes/cloudinary-image.pipe';
+import { AuthStore } from './store/auth/auth.store';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class App implements OnInit {
   readonly confirm = inject(ConfirmDialogService);
   readonly config = inject(ConfiguracionStore);
   readonly theme = inject(ThemeService);
+  private readonly auth = inject(AuthStore);
   private readonly router = inject(Router);
   readonly enAdministracion = toSignal(this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -32,7 +34,7 @@ export class App implements OnInit {
     const color = this.config.config()?.strCfgColorPrimario;
     if (color) this.theme.setAccent(color);
   });
-  ngOnInit(): void { this.config.cargar(); }
+  ngOnInit(): void { this.config.cargar(); void this.auth.restaurarSesion(); }
   get footerText(): string { return this.config.config()?.strCfgTextoPie || ''; }
   get footerForeground(): string | null {
     const fondo = this.config.config()?.strCfgColorFondoPie?.trim();

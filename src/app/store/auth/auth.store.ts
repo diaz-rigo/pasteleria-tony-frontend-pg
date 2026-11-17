@@ -1,48 +1,84 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from './auth.service';
 import { ToastService } from '../../shared/components/toast/toast.service';
 
+export interface UsuarioSesion { intUsuLlave: number; strUsuEmail: string; strUsuRol: string; }
+
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
-  private authHttp = inject(AuthService);
-  private router = inject(Router);
-  private toast = inject(ToastService);
+  private readonly authHttp = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
+  private sesionRestaurada = false;
+  private restauracion?: Promise<boolean>;
 
-  readonly token = signal<string | null>(localStorage.getItem('token'));
-  readonly usuario = signal<{ intUsuLlave: number; strUsuEmail: string; strUsuRol: string } | null>(
-    JSON.parse(localStorage.getItem('usuario') || 'null')
-  );
+  readonly usuario = signal<UsuarioSesion | null>(null);
+  readonly autenticado = signal(false);
   readonly cargando = signal(false);
 
-  estaAutenticado(): boolean { return !!this.token(); }
+  constructor() {
+    try { localStorage.removeItem('token'); localStorage.removeItem('usuario'); }
+    catch { /* La sesión ya no depende de almacenamiento accesible a JavaScript. */ }
+    if (typeof window !== 'undefined') window.addEventListener('pasteleria:auth-expired', () => this.sesionExpirada());
+  }
+
+  estaAutenticado(): boolean { return this.autenticado(); }
   tienePermiso(permiso: string): boolean { return this.usuario()?.strUsuRol === permiso || this.usuario()?.strUsuRol === 'ADMIN'; }
+
+  restaurarSesion(): Promise<boolean> {
+    if (this.sesionRestaurada) return Promise.resolve(this.estaAutenticado());
+    if (this.restauracion) return this.restauracion;
+    this.restauracion = firstValueFrom(this.authHttp.sesion()).then(res => {
+      const usuario = res.ok ? res.data?.usuario : null;
+      this.usuario.set(usuario || null);
+      this.autenticado.set(!!usuario);
+      return !!usuario;
+    }).catch(() => {
+      this.limpiarSesionLocal();
+      return false;
+    }).finally(() => {
+      this.sesionRestaurada = true;
+      this.restauracion = undefined;
+    });
+    return this.restauracion;
+  }
 
   login(strUsuEmail: string, strUsuPassword: string): void {
     this.cargando.set(true);
     this.authHttp.login({ strUsuEmail, strUsuPassword }).subscribe({
-      next: (res) => {
+      next: res => {
         this.cargando.set(false);
-        if (res.ok && res.data) {
-          localStorage.setItem('token', res.data.token);
-          localStorage.setItem('usuario', JSON.stringify(res.data.usuario));
-          this.token.set(res.data.token);
-          this.usuario.set(res.data.usuario);
-          this.toast.success(res.mensaje || 'Bienvenido');
-          this.router.navigateByUrl('/admin');
-        } else {
-          this.toast.error(res.mensaje || 'Credenciales inválidas');
+        if (!res.ok || !res.data?.usuario) {
+          this.toast.error(res.mensaje || 'Correo o contraseña inválidos');
+          return;
         }
+        this.usuario.set(res.data.usuario);
+        this.autenticado.set(true);
+        this.sesionRestaurada = true;
+        this.toast.success(res.mensaje || 'Bienvenido');
+        void this.router.navigateByUrl(res.data.usuario.strUsuRol === 'ADMIN' ? '/admin' : '/');
       },
-      error: () => { this.cargando.set(false); },
+      error: error => { this.cargando.set(false); this.toast.error(error?.error?.mensaje || 'No se pudo iniciar sesión.'); },
     });
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    this.token.set(null);
+    this.limpiarSesionLocal();
+    this.sesionRestaurada = true;
+    this.authHttp.logout().subscribe({ error: () => undefined });
+    void this.router.navigateByUrl('/login');
+  }
+
+  sesionExpirada(): void {
+    this.limpiarSesionLocal();
+    this.sesionRestaurada = true;
+    void this.router.navigateByUrl('/login');
+  }
+
+  private limpiarSesionLocal(): void {
     this.usuario.set(null);
-    this.router.navigateByUrl('/login');
+    this.autenticado.set(false);
   }
 }

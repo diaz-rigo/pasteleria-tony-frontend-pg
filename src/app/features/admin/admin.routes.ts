@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
+import { permissionGuard } from '../../core/guards/permission.guard';
 
 export const ADMIN_ROUTES: Routes = [
   {
     path: '',
+    canActivateChild: [permissionGuard('ADMIN')],
     loadComponent: () => import('./admin-layout/admin-layout').then(m => m.AdminLayout),
     children: [
       { path: '', redirectTo: 'usuarios', pathMatch: 'full' },

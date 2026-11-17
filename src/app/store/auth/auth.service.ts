@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../../models/usuario.model';
 
 interface LoginPayload { strUsuEmail: string; strUsuPassword: string; }
-interface LoginData { token: string; usuario: { intUsuLlave: number; strUsuEmail: string; strUsuRol: string; }; }
+interface LoginData { usuario: { intUsuLlave: number; strUsuEmail: string; strUsuRol: string; }; }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -15,4 +15,8 @@ export class AuthService {
   login(payload: LoginPayload): Observable<ApiResponse<LoginData>> {
     return this.http.post<ApiResponse<LoginData>>(`${this.base}/login`, payload);
   }
+  sesion(): Observable<ApiResponse<Pick<LoginData, 'usuario'>>> {
+    return this.http.get<ApiResponse<Pick<LoginData, 'usuario'>>>(`${this.base}/session`);
+  }
+  logout(): Observable<ApiResponse<unknown>> { return this.http.post<ApiResponse<unknown>>(`${this.base}/logout`, {}); }
 }

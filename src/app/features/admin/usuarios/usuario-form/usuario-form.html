@@ -1,6 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5">
   <label class="sm:col-span-2"><span class="admin-label">Correo electrónico</span><input type="email" autocomplete="email" formControlName="strUsuEmail" class="admin-input" placeholder="nombre@dominio.com"></label>
-  <label class="sm:col-span-2"><span class="admin-label">{{usuario?'Nueva contraseña (opcional)':'Contraseña'}}</span><input type="password" [autocomplete]="usuario?'new-password':'new-password'" formControlName="strUsuPassword" class="admin-input" placeholder="Mínimo 8 caracteres"></label>
+  <label class="sm:col-span-2"><span class="admin-label">{{usuario?'Nueva contraseña (opcional)':'Contraseña'}}</span><input type="password" autocomplete="new-password" maxlength="72" formControlName="strUsuPassword" class="admin-input" placeholder="Mínimo 8 caracteres"></label>
   <label><span class="admin-label">Nombre</span><input autocomplete="given-name" formControlName="strUsuNombre" class="admin-input"></label>
   <label><span class="admin-label">Apellido paterno</span><input autocomplete="family-name" formControlName="strUsuApellidoPaterno" class="admin-input"></label>
   <label><span class="admin-label">Apellido materno</span><input formControlName="strUsuApellidoMaterno" class="admin-input"></label>
