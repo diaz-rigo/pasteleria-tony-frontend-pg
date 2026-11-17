@@ -18,11 +18,11 @@ export class Inicio implements OnInit {
     return this.productos.imagenProducto(id);
   }
   precioDesde(id: number): number | null {
-    const precios = this.productos.tallasProducto(id).map(t => Number(t.decTalPrecio)).filter(n => Number.isFinite(n) && n > 0);
+    const precios = this.productos.presentacionesProducto(id).map(p => p.precio).filter(n => Number.isFinite(n) && n > 0);
     return precios.length ? Math.min(...precios) : null;
   }
   categoriaNombre(id: number): string | undefined {
-    return this.productos.categorias().find(c => c.intCtgLlave === id)?.strCtgNombre;
+    return this.productos.categorias().find(c => c.id === id)?.nombre;
   }
   heroButtonUrl(): string {
     const url = this.config.config()?.strCfgUrlBotonHero?.trim();

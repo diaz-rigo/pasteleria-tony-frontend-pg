@@ -6,15 +6,19 @@
   </header>
   <aside class="admin-sidebar" aria-label="Navegación de administración">
     <a routerLink="/admin" class="admin-sidebar-brand"><span class="admin-brand-mark">T</span><span><strong>Pastelería Tony</strong><small>Administración</small></span></a>
-    <p class="admin-nav-label">GESTIÓN</p>
-    <nav class="admin-nav">
-      <a routerLink="usuarios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideUsers [size]="18"></svg>Usuarios</a>
-      <a routerLink="categorias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideTags [size]="18"></svg>Categorías</a>
+    <p class="admin-nav-label">CATÁLOGOS</p><nav class="admin-nav">
       <a routerLink="productos" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucidePackage [size]="18"></svg>Productos</a>
+      <a routerLink="categorias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideTags [size]="18"></svg>Categorías</a>
+      <a routerLink="sabores" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideTags [size]="18"></svg>Sabores por categoría</a>
+    </nav>
+    <p class="admin-nav-label">OPERACIÓN</p><nav class="admin-nav">
       <a routerLink="pedidos" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideShoppingBag [size]="18"></svg>Pedidos</a>
       <a routerLink="galerias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideImages [size]="18"></svg>Galerías</a>
       <a routerLink="portafolios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideBriefcaseBusiness [size]="18"></svg>Portafolios</a>
-      <a routerLink="configuracion" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideSettings [size]="18"></svg>Configuración</a>
+    </nav>
+    <p class="admin-nav-label">CONFIGURACIÓN</p><nav class="admin-nav">
+      <a routerLink="usuarios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideUsers [size]="18"></svg>Usuarios</a>
+      <a routerLink="configuracion" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideSettings [size]="18"></svg>Negocio</a>
     </nav>
     <a routerLink="/" class="admin-back-site"><svg lucideArrowLeft [size]="16"></svg>Volver al sitio público</a>
   </aside>
@@ -23,10 +27,9 @@
       <button class="admin-drawer-backdrop" (click)="cerrarMenu()" aria-label="Cerrar menú"></button>
       <aside class="admin-drawer">
         <div class="admin-drawer-head"><span class="admin-sidebar-brand"><span class="admin-brand-mark">T</span><span><strong>Pastelería Tony</strong><small>Administración</small></span></span><button class="admin-menu-button" (click)="cerrarMenu()" aria-label="Cerrar menú"><svg lucideX [size]="19"></svg></button></div>
-        <p class="admin-nav-label">GESTIÓN</p>
-        <nav class="admin-nav">
-          <a routerLink="usuarios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideUsers [size]="18"></svg>Usuarios</a><a routerLink="categorias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideTags [size]="18"></svg>Categorías</a><a routerLink="productos" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucidePackage [size]="18"></svg>Productos</a><a routerLink="pedidos" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideShoppingBag [size]="18"></svg>Pedidos</a><a routerLink="galerias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideImages [size]="18"></svg>Galerías</a><a routerLink="portafolios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideBriefcaseBusiness [size]="18"></svg>Portafolios</a><a routerLink="configuracion" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideSettings [size]="18"></svg>Configuración</a>
-        </nav><a routerLink="/" class="admin-back-site" (click)="cerrarMenu()"><svg lucideArrowLeft [size]="16"></svg>Volver al sitio público</a>
+        <p class="admin-nav-label">CATÁLOGOS</p><nav class="admin-nav"><a routerLink="productos" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucidePackage [size]="18"></svg>Productos</a><a routerLink="categorias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideTags [size]="18"></svg>Categorías</a><a routerLink="sabores" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideTags [size]="18"></svg>Sabores por categoría</a></nav>
+        <p class="admin-nav-label">OPERACIÓN</p><nav class="admin-nav"><a routerLink="pedidos" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideShoppingBag [size]="18"></svg>Pedidos</a><a routerLink="galerias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideImages [size]="18"></svg>Galerías</a><a routerLink="portafolios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideBriefcaseBusiness [size]="18"></svg>Portafolios</a></nav>
+        <p class="admin-nav-label">CONFIGURACIÓN</p><nav class="admin-nav"><a routerLink="usuarios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideUsers [size]="18"></svg>Usuarios</a><a routerLink="configuracion" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideSettings [size]="18"></svg>Negocio</a></nav><a routerLink="/" class="admin-back-site" (click)="cerrarMenu()"><svg lucideArrowLeft [size]="16"></svg>Volver al sitio público</a>
       </aside>
     </div>
   }

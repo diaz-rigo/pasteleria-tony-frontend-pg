@@ -12,23 +12,22 @@ export class Catalogo implements OnInit {
   readonly filtro=signal('todos');
   readonly categoriasFiltro=computed(()=>[
     { id:'todos', nombre:'Todos' },
-    ...this.store.visibles().map(c=>({id:`categoria-${c.intCtgLlave}`,nombre:c.strCtgNombre})),
+    ...this.store.visibles().map(c=>({id:`categoria-${c.id}`,nombre:c.nombre})),
     { id:'favoritos', nombre:'Favoritos' },
     { id:'disponibles', nombre:'Disponibles' },
   ]);
   readonly productosFiltrados=computed(()=>{
     const q=this.busqueda().trim().toLocaleLowerCase();
     return this.store.productos().filter(p=>{
-      const coincide=!q||`${p.strProNombre} ${p.strProDescripcion||''} ${p.strProIngredientes}`.toLocaleLowerCase().includes(q);
+      const coincide=!q||`${p.nombre} ${p.descripcion||''} ${p.ingredientes||''} ${p.sabor||''}`.toLocaleLowerCase().includes(q);
       const filtro=this.filtro();
       const idCategoria=Number(filtro.replace('categoria-',''));
-      return coincide&&(filtro==='todos'||(filtro.startsWith('categoria-')&&p.intCtgLlave===idCategoria)||(filtro==='favoritos'&&p.blnProDestacado)||(filtro==='disponibles'&&p.strProEstadoDisponibilidad==='available'));
+      return coincide&&(filtro==='todos'||(filtro.startsWith('categoria-')&&p.categoria.id===idCategoria)||(filtro==='favoritos'&&p.destacado)||(filtro==='disponibles'&&p.disponibilidad==='disponible'));
     });
   });
   ngOnInit():void { this.store.cargar(); }
-  disponibilidad(estado?:string):string { return estado==='out_of_stock'?'Agotado':estado==='on_demand'?'Sobre pedido':'Disponible'; }
-  categoriaNombre(id:number):string { return this.store.categorias().find(c=>c.intCtgLlave===id)?.strCtgNombre||'Hecho en casa'; }
-  precioDesde(id:number):number|null { const precios=this.store.tallasProducto(id).map(t=>Number(t.decTalPrecio)).filter(n=>Number.isFinite(n)&&n>0); return precios.length?Math.min(...precios):null; }
-  medidasDisponibles(id:number):string { return [...new Set(this.store.tallasProducto(id).filter(t=>t.strTalEstadoDisponibilidad!=='out_of_stock').map(t=>String(t.decTalMedida)))].join(' · '); }
+  disponibilidad(estado?:string):string { return estado==='agotado'?'Agotado':estado==='sobre_pedido'?'Sobre pedido':'Disponible'; }
+  precioDesde(id:number):number|null { const precios=this.store.presentacionesProducto(id).map(p=>p.precio).filter(n=>Number.isFinite(n)&&n>0); return precios.length?Math.min(...precios):null; }
+  medidasDisponibles(id:number):string { return [...new Set(this.store.presentacionesProducto(id).map(p=>`${p.cantidad} ${p.unidad}`))].join(' · '); }
   resumenCalificacion(id:number): {promedio:number;cantidad:number}|null { return this.store.resumenCalificacion(id); }
 }

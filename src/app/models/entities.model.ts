@@ -1,48 +1,3 @@
-export interface Categoria {
-  intCtgLlave?: number;
-  strCtgNombre: string;
-  strCtgDescripcion?: string;
-  blnCtgActivo?: boolean;
-}
-
-export interface Producto {
-  intProLlave?: number;
-  strProNombre: string;
-  strProMarca?: string;
-  intCtgLlave: number;
-  strProIngredientes: string;
-  strProDescripcion?: string;
-  blnProDestacado?: boolean;
-  strProEstadoDisponibilidad?: string;
-  decProCalificacionPromedio?: number;
-}
-
-export interface VarianteProducto {
-  intVarLlave?: number;
-  intProLlave: number;
-  strVarSabor: string;
-  strVarColor: string;
-  strVarTextura: string;
-  strVarForma: string;
-  strVarDescripcion?: string;
-  strVarEstadoDisponibilidad?: string;
-}
-
-export interface ImagenVariante {
-  intImaLlave?: number;
-  intVarLlave: number;
-  strImaUrl: string;
-}
-
-export interface Talla {
-  intTalLlave?: number;
-  intVarLlave: number;
-  decTalMedida: number;
-  intTalStock?: number;
-  decTalPrecio: number;
-  strTalEstadoDisponibilidad?: string;
-}
-
 export interface ImagenGaleria {
   intImgLlave?: number;
   intGalLlave: number;
@@ -60,8 +15,6 @@ export interface EtiquetaPortafolio { intEtiLlave?: number; intPorLlave: number;
 export interface ColorPortafolio { intColLlave?: number; intPorLlave: number; strColNombre: string; }
 export interface CategoriaGaleria { intGctLlave?: number; intGalLlave: number; strGctNombre: string; }
 export interface EtiquetaGaleria { intEtiLlave?: number; intGalLlave: number; strEtiNombre: string; }
-export interface Calificacion { intCalLlave?: number; intProLlave: number; shtCalPuntuacion: number; }
-
 export interface Pedido {
   intPedLlave?: number;
   strPedCodigo?: string;

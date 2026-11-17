@@ -3,26 +3,27 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../../models/usuario.model';
-import { Producto } from '../../models/producto.model';
-import { Calificacion, ImagenVariante, Talla, VarianteProducto } from '../../models/entities.model';
+import { FotoProducto, Producto, PublicacionProducto, SaborPorCategoria } from '../../models/producto.model';
+
+export interface FirmaCargaFoto { nombreNube: string; claveApi: string; marcaTemporal: number; carpeta: string; firma: string; }
 
 @Injectable({ providedIn: 'root' })
 export class ProductosService {
-  private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/productos`;
-  listar(): Observable<ApiResponse<Producto[]>> { return this.http.get<ApiResponse<Producto[]>>(this.base); }
-  listarVariantes(): Observable<ApiResponse<VarianteProducto[]>> { return this.http.get<ApiResponse<VarianteProducto[]>>(`${environment.apiUrl}/variantes-producto`); }
-  listarImagenesVariantes(): Observable<ApiResponse<ImagenVariante[]>> { return this.http.get<ApiResponse<ImagenVariante[]>>(`${environment.apiUrl}/imagenes-variante`); }
-  listarTallas(): Observable<ApiResponse<Talla[]>> { return this.http.get<ApiResponse<Talla[]>>(`${environment.apiUrl}/tallas`); }
-  listarCalificaciones(): Observable<ApiResponse<Calificacion[]>> { return this.http.get<ApiResponse<Calificacion[]>>(`${environment.apiUrl}/calificaciones`); }
-  firmarSubidaImagen(intProLlave: number): Observable<ApiResponse<{ cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string }>> {
-    return this.http.post<ApiResponse<{ cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string }>>(`${environment.apiUrl}/cloudinary/upload-signature`, { intProLlave });
+  private readonly http = inject(HttpClient);
+  private readonly productosUrl = `${environment.apiUrl}/productos`;
+  private readonly saboresUrl = `${environment.apiUrl}/sabores`;
+  listar(): Observable<ApiResponse<Producto[]>> { return this.http.get<ApiResponse<Producto[]>>(this.productosUrl); }
+  listarSabores(categoriaId: number): Observable<ApiResponse<string[]>> { return this.http.get<ApiResponse<string[]>>(`${this.saboresUrl}?categoriaId=${categoriaId}`); }
+  listarCatalogoSabores(): Observable<ApiResponse<SaborPorCategoria[]>> { return this.http.get<ApiResponse<SaborPorCategoria[]>>(`${this.saboresUrl}/catalogo`); }
+  guardarSabor(nombre: string, categoriaId: number): Observable<ApiResponse<{ nombre: string }>> { return this.http.post<ApiResponse<{ nombre: string }>>(this.saboresUrl, { nombre, categoriaId }); }
+  quitarSabor(nombre: string, categoriaId: number): Observable<ApiResponse<unknown>> { return this.http.delete<ApiResponse<unknown>>(`${this.saboresUrl}/categoria/${categoriaId}?nombre=${encodeURIComponent(nombre)}`); }
+  guardarPublicacion(datos: PublicacionProducto, productoId?: number): Observable<ApiResponse<Producto>> {
+    return productoId ? this.http.put<ApiResponse<Producto>>(`${this.productosUrl}/${productoId}/publicacion`, datos) : this.http.post<ApiResponse<Producto>>(`${this.productosUrl}/publicacion`, datos);
   }
-  crearVariante(data: Partial<VarianteProducto>): Observable<ApiResponse<VarianteProducto>> { return this.http.post<ApiResponse<VarianteProducto>>(`${environment.apiUrl}/variantes-producto`, data); }
-  crearImagenVariante(data: Partial<ImagenVariante>): Observable<ApiResponse<ImagenVariante>> { return this.http.post<ApiResponse<ImagenVariante>>(`${environment.apiUrl}/imagenes-variante`, data); }
-  eliminarImagenVariante(id: number): Observable<ApiResponse<unknown>> { return this.http.delete<ApiResponse<unknown>>(`${environment.apiUrl}/imagenes-variante/${id}`); }
-  obtenerPorId(id: number): Observable<ApiResponse<Producto>> { return this.http.get<ApiResponse<Producto>>(`${this.base}/${id}`); }
-  crear(data: Partial<Producto>): Observable<ApiResponse<Producto>> { return this.http.post<ApiResponse<Producto>>(this.base, data); }
-  actualizar(id: number, data: Partial<Producto>): Observable<ApiResponse<Producto>> { return this.http.put<ApiResponse<Producto>>(`${this.base}/${id}`, data); }
-  eliminar(id: number): Observable<ApiResponse<unknown>> { return this.http.delete<ApiResponse<unknown>>(`${this.base}/${id}`); }
+  firmarCargaFoto(productoId: number): Observable<ApiResponse<FirmaCargaFoto>> { return this.http.post<ApiResponse<FirmaCargaFoto>>(`${environment.apiUrl}/cloudinary/upload-signature`, { productoId }); }
+  guardarFotos(productoId: number, fotos: Array<Pick<FotoProducto, 'url'>>, eliminarIds: number[]): Observable<ApiResponse<Producto>> {
+    return this.http.post<ApiResponse<Producto>>(`${this.productosUrl}/${productoId}/fotos`, { fotos, eliminarIds });
+  }
+  obtenerPorId(productoId: number): Observable<ApiResponse<Producto>> { return this.http.get<ApiResponse<Producto>>(`${this.productosUrl}/${productoId}`); }
+  eliminar(productoId: number): Observable<ApiResponse<unknown>> { return this.http.delete<ApiResponse<unknown>>(`${this.productosUrl}/${productoId}`); }
 }

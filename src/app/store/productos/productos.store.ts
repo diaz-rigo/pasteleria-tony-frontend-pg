@@ -4,123 +4,79 @@ import { catchError } from 'rxjs/operators';
 import { ProductosService } from './productos.service';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { ConfirmDialogService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
-import { Producto } from '../../models/producto.model';
-import { CategoriasService } from '../categorias/categorias.service';
 import { Categoria } from '../../models/categoria.model';
-import { Calificacion, ImagenVariante, Talla, VarianteProducto } from '../../models/entities.model';
+import { CategoriasService } from '../categorias/categorias.service';
+import { FotoProducto, PresentacionProducto, Producto, PublicacionProducto, SaborPorCategoria } from '../../models/producto.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductosStore {
-  private http = inject(ProductosService);
-  private categoriasHttp = inject(CategoriasService);
-  private toast = inject(ToastService);
-  private confirm = inject(ConfirmDialogService);
-
+  private readonly api = inject(ProductosService);
+  private readonly categoriasApi = inject(CategoriasService);
+  private readonly avisos = inject(ToastService);
+  private readonly confirmacion = inject(ConfirmDialogService);
   readonly productos = signal<Producto[]>([]);
   readonly seleccionado = signal<Producto | null>(null);
+  readonly categorias = signal<Categoria[]>([]);
+  readonly saboresPorCategoria = signal<SaborPorCategoria[]>([]);
   readonly cargando = signal(false);
   readonly error = signal<string | null>(null);
-  readonly categorias = signal<Categoria[]>([]);
-  readonly variantes = signal<VarianteProducto[]>([]);
-  readonly imagenes = signal<ImagenVariante[]>([]);
-  readonly tallas = signal<Talla[]>([]);
-  readonly calificaciones = signal<Calificacion[]>([]);
-  readonly visibles = computed(() => this.categorias().filter(c => c.blnCtgActivo !== false));
+  readonly visibles = computed(() => this.categorias().filter(categoria => categoria.activa && !categoria.idPadre));
 
   cargar(): void {
-    this.cargando.set(true);
-    this.error.set(null);
+    this.cargando.set(true); this.error.set(null);
     forkJoin({
-      productos: this.http.listar(),
-      categorias: this.categoriasHttp.listar().pipe(catchError(() => of({ ok: false, data: [] as Categoria[] }))),
-      variantes: this.http.listarVariantes().pipe(catchError(() => of({ ok: false, data: [] as VarianteProducto[] }))),
-      imagenes: this.http.listarImagenesVariantes().pipe(catchError(() => of({ ok: false, data: [] as ImagenVariante[] }))),
-      tallas: this.http.listarTallas().pipe(catchError(() => of({ ok: false, data: [] as Talla[] }))),
-      calificaciones: this.http.listarCalificaciones().pipe(catchError(() => of({ ok: false, data: [] as Calificacion[] }))),
+      productos: this.api.listar(),
+      categorias: this.categoriasApi.listar().pipe(catchError(() => of({ ok: false, data: [] as Categoria[] }))),
+      sabores: this.api.listarCatalogoSabores().pipe(catchError(() => of({ ok: false, data: [] as SaborPorCategoria[] }))),
     }).subscribe({
-      next: ({ productos, categorias, variantes, imagenes, tallas, calificaciones }) => {
+      next: respuesta => {
         this.cargando.set(false);
-        if (productos.ok && productos.data) this.productos.set(productos.data);
-        else this.error.set(productos.mensaje || 'Error al cargar productos');
-        this.categorias.set(categorias.data || []);
-        this.variantes.set(variantes.data || []);
-        this.imagenes.set(imagenes.data || []);
-        this.tallas.set(tallas.data || []);
-        this.calificaciones.set(calificaciones.data || []);
+        if (respuesta.productos.ok && respuesta.productos.data) this.productos.set(respuesta.productos.data);
+        else this.error.set(respuesta.productos.mensaje || 'No se pudieron cargar los productos.');
+        this.categorias.set(respuesta.categorias.data || []);
+        this.saboresPorCategoria.set(respuesta.sabores.data || []);
       },
-      error: () => { this.cargando.set(false); this.error.set('Error al cargar el catálogo'); },
+      error: () => { this.cargando.set(false); this.error.set('No se pudo cargar el catálogo.'); },
     });
   }
-
-  imagenProducto(productoId: number): string | null {
-    const variantIds = new Set(this.variantes().filter(v => v.intProLlave === productoId).map(v => v.intVarLlave));
-    return this.imagenes().find(i => variantIds.has(i.intVarLlave))?.strImaUrl || null;
+  imagenProducto(productoId: number): string | null { const fotos = this.productos().find(producto => producto.id === productoId)?.fotos || []; return fotos.find(foto => foto.principal)?.url || fotos[0]?.url || null; }
+  fotosProducto(productoId: number): FotoProducto[] { return this.productos().find(producto => producto.id === productoId)?.fotos || []; }
+  saboresCategoria(categoriaId: number, subcategoriaId?: number): string[] {
+    const ids = new Set([categoriaId, ...(subcategoriaId ? [subcategoriaId] : [])]);
+    return [...new Set(this.saboresPorCategoria().filter(item => ids.has(item.categoriaId)).flatMap(item => item.sabores))].sort((a,b) => a.localeCompare(b));
   }
-
-  variantesProducto(productoId: number): VarianteProducto[] {
-    return this.variantes().filter(v => v.intProLlave === productoId);
-  }
-
-  tallasProducto(productoId: number): Talla[] {
-    const variantIds = new Set(this.variantesProducto(productoId).map(v => v.intVarLlave));
-    return this.tallas().filter(t => variantIds.has(t.intVarLlave));
-  }
-
+  nombreSubcategoria(subcategoriaId?: number | null): string | null { return this.categorias().find(categoria => categoria.id === subcategoriaId)?.nombre || null; }
+  presentacionesProducto(productoId: number): PresentacionProducto[] { return this.productos().find(producto => producto.id === productoId)?.presentaciones || []; }
   resumenCalificacion(productoId: number): { promedio: number; cantidad: number } | null {
-    const puntuaciones = this.calificaciones().filter(r => r.intProLlave === productoId).map(r => Number(r.shtCalPuntuacion)).filter(n => n >= 1 && n <= 5);
-    return puntuaciones.length ? { promedio: puntuaciones.reduce((sum, value) => sum + value, 0) / puntuaciones.length, cantidad: puntuaciones.length } : null;
+    const producto = this.productos().find(item => item.id === productoId);
+    return producto?.cantidadOpiniones ? { promedio: producto.calificacionPromedio, cantidad: producto.cantidadOpiniones } : null;
   }
-  obtener(id: number): void {
-    this.cargando.set(true);
-    this.http.obtenerPorId(id).subscribe({
-      next: (res) => { this.cargando.set(false); if (res.ok && res.data) this.seleccionado.set(res.data); },
-      error: () => { this.cargando.set(false); },
+  async guardarSabor(nombre: string, categoriaId: number): Promise<void> {
+    const respuesta = await firstValueFrom(this.api.guardarSabor(nombre, categoriaId));
+    if (!respuesta.ok || !respuesta.data) throw new Error(respuesta.mensaje || 'No se pudo guardar el sabor.');
+    this.saboresPorCategoria.update(catalogo => {
+      const actual = catalogo.find(item => item.categoriaId === categoriaId);
+      if (!actual) return [...catalogo, { categoriaId, categoriaNombre: '', sabores: [respuesta.data!.nombre] }];
+      return catalogo.map(item => item.categoriaId === categoriaId ? { ...item, sabores: [...new Set([...item.sabores, respuesta.data!.nombre])].sort((a,b) => a.localeCompare(b)) } : item);
     });
   }
-  crear(data: Partial<Producto>, onDone?: (producto?: Producto) => void): void {
-    this.http.crear(data).subscribe({
-      next: (res) => { if (res.ok) { this.toast.success(res.mensaje || 'Creado'); this.cargar(); onDone?.(res.data); } else this.toast.error(res.mensaje || 'Error'); },
-      error: () => this.toast.error('Error al crear producto'),
-    });
+  async guardarPublicacion(datos: PublicacionProducto, productoId?: number): Promise<Producto> {
+    const respuesta = await firstValueFrom(this.api.guardarPublicacion(datos, productoId));
+    if (!respuesta.ok || !respuesta.data) throw new Error(respuesta.mensaje || 'No se pudo guardar el producto.');
+    this.actualizarProducto(respuesta.data); this.avisos.success(respuesta.mensaje || 'Producto guardado.');
+    return respuesta.data;
   }
-  crearVariante(data: Partial<VarianteProducto>, onDone?: (variante?: VarianteProducto) => void): void {
-    this.http.crearVariante(data).subscribe({
-      next: res => { if (res.ok && res.data) { this.variantes.update(items => [...items, res.data!]); this.toast.success('Variante agregada'); onDone?.(res.data); } else { this.toast.error(res.mensaje || 'No se pudo agregar la variante'); onDone?.(); } },
-      error: () => { this.toast.error('Error al agregar la variante'); onDone?.(); },
-    });
+  async guardarFotos(productoId: number, urls: string[], eliminarIds: number[]): Promise<Producto> {
+    const respuesta = await firstValueFrom(this.api.guardarFotos(productoId, urls.map(url => ({ url })), eliminarIds));
+    if (!respuesta.ok || !respuesta.data) throw new Error(respuesta.mensaje || 'No se pudieron guardar las fotos.');
+    this.actualizarProducto(respuesta.data); return respuesta.data;
   }
-  async crearImagenVariante(data: Partial<ImagenVariante>): Promise<ImagenVariante> {
-    try {
-      const res = await firstValueFrom(this.http.crearImagenVariante(data));
-      if (!res.ok || !res.data) throw new Error(res.mensaje || 'No se pudo guardar la imagen.');
-      this.imagenes.update(items => [...items, res.data!]);
-      this.toast.success('Imagen agregada al producto');
-      return res.data;
-    } catch (error) {
-      this.toast.error(error instanceof Error ? error.message : 'Error al guardar la imagen');
-      throw error;
-    }
+  private actualizarProducto(producto: Producto): void {
+    this.productos.update(lista => lista.some(actual => actual.id === producto.id) ? lista.map(actual => actual.id === producto.id ? producto : actual) : [producto, ...lista]);
   }
-  async eliminarImagenVariante(id: number): Promise<void> {
-    const ok = await this.confirm.confirmar('¿Eliminar esta imagen de la variante?');
-    if (!ok) return;
-    this.http.eliminarImagenVariante(id).subscribe({
-      next: res => { if (res.ok) { this.imagenes.update(items => items.filter(item => item.intImaLlave !== id)); this.toast.success('Imagen eliminada'); } else this.toast.error(res.mensaje || 'No se pudo eliminar la imagen'); },
-      error: () => this.toast.error('Error al eliminar la imagen'),
-    });
-  }
-  actualizar(id: number, data: Partial<Producto>, onDone?: () => void): void {
-    this.http.actualizar(id, data).subscribe({
-      next: (res) => { if (res.ok) { this.toast.success(res.mensaje || 'Actualizado'); this.cargar(); onDone?.(); } else this.toast.error(res.mensaje || 'Error'); },
-      error: () => this.toast.error('Error al actualizar producto'),
-    });
-  }
+  obtener(id: number): void { this.cargando.set(true); this.api.obtenerPorId(id).subscribe({ next: respuesta => { this.cargando.set(false); if (respuesta.ok && respuesta.data) { this.seleccionado.set(respuesta.data); this.actualizarProducto(respuesta.data); } }, error: () => this.cargando.set(false) }); }
   async eliminar(id: number): Promise<void> {
-    const ok = await this.confirm.confirmar('¿Eliminar este producto?');
-    if (!ok) return;
-    this.http.eliminar(id).subscribe({
-      next: (res) => { if (res.ok) { this.toast.success(res.mensaje || 'Eliminado'); this.cargar(); } else this.toast.error(res.mensaje || 'Error'); },
-      error: () => this.toast.error('Error al eliminar producto'),
-    });
+    if (!await this.confirmacion.confirmar('¿Eliminar este producto?')) return;
+    this.api.eliminar(id).subscribe({ next: respuesta => { if (respuesta.ok) { this.avisos.success(respuesta.mensaje || 'Producto eliminado.'); this.productos.update(lista => lista.filter(producto => producto.id !== id)); } else this.avisos.error(respuesta.mensaje || 'No se pudo eliminar el producto.'); }, error: () => this.avisos.error('No se pudo eliminar el producto.') });
   }
 }

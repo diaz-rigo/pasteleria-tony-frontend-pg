@@ -11,25 +11,30 @@ import { LucideSave, LucideX } from '@lucide/angular';
 })
 export class CategoriaForm {
   @Input() categoria: Categoria | null = null;
+  @Input() categorias: Categoria[] = [];
   @Output() guardar = new EventEmitter<Partial<Categoria>>();
   @Output() cancelar = new EventEmitter<void>();
 
   private fb = inject(FormBuilder);
   form = this.fb.nonNullable.group({
-    strCtgNombre: ['', Validators.required],
-    strCtgDescripcion: [''],
-    blnCtgActivo: [true],
+    nombre: ['', Validators.required],
+    descripcion: [''],
+    idPadre: [null as number | null],
+    activa: [true],
   });
+
+  categoriasPadre(): Categoria[] { return this.categorias.filter(c => !c.idPadre && c.id !== this.categoria?.id); }
 
   ngOnChanges(): void {
     if (this.categoria) {
       this.form.patchValue({
-        strCtgNombre: this.categoria.strCtgNombre,
-        strCtgDescripcion: this.categoria.strCtgDescripcion || '',
-        blnCtgActivo: this.categoria.blnCtgActivo ?? true,
+        nombre: this.categoria.nombre,
+        descripcion: this.categoria.descripcion || '',
+        idPadre: this.categoria.idPadre ?? null,
+        activa: this.categoria.activa ?? true,
       });
     } else {
-      this.form.reset({ strCtgNombre: '', strCtgDescripcion: '', blnCtgActivo: true });
+      this.form.reset({ nombre: '', descripcion: '', idPadre: null, activa: true });
     }
   }
   submit(): void {

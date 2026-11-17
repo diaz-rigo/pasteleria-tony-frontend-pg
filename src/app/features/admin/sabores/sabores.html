@@ -1,0 +1,46 @@
+<section class="admin-page flavor-page">
+  <header class="admin-page-heading flavor-heading">
+    <div class="flavor-heading-copy">
+      <span class="flavor-heading-icon"><svg lucideTags [size]="20"></svg></span>
+      <div><p class="flavor-eyebrow">CATÁLOGOS</p><h1 class="admin-page-title">Sabores por categoría</h1><p class="admin-page-description">Organiza las opciones que aparecerán al publicar tus productos.</p></div>
+    </div>
+    @if(categoriaId){<span class="flavor-active-category"><span></span>{{categoriaNombre()}}</span>}
+  </header>
+
+  <div class="flavor-admin-grid">
+    <section class="admin-card flavor-category-card">
+      <div class="admin-card-heading flavor-card-heading"><div><p class="flavor-step">PASO 1</p><h2 class="admin-card-title">Selecciona una categoría</h2><p class="flavor-card-description">También puedes elegir un tipo o subcategoría.</p></div><span class="flavor-total-count">{{categorias.categorias().length}}</span></div>
+      <div class="flavor-category-list">
+        @for(category of categorias.categorias();track category.id){
+          <button type="button" (click)="seleccionarCategoria(category.id || 0)" class="flavor-category-option" [class.flavor-category-selected]="categoriaId===category.id" [attr.aria-pressed]="categoriaId===category.id">
+            <span class="flavor-category-mark"><svg lucideTags [size]="16"></svg></span>
+            <span class="flavor-category-copy"><strong>{{category.nombre}}</strong>@if(categoriaPadre(category.id);as parent){<small>{{parent}} <span>· Tipo</span></small>}@else{<small>Categoría principal</small>}</span>
+            <span class="flavor-count">{{productos.saboresCategoria(category.id || 0).length}}</span>
+          </button>
+        } @empty { <div class="flavor-no-categories">Aún no hay categorías para organizar sabores.</div> }
+      </div>
+      <p class="flavor-side-note">El catálogo de cada categoría puede compartir sabores con sus tipos.</p>
+    </section>
+
+    <section class="admin-card flavor-management-card">
+      <div class="admin-card-heading flavor-card-heading">
+        <div><p class="flavor-step">PASO 2</p><h2 class="admin-card-title">{{categoriaId ? 'Sabores de '+categoriaNombre() : 'Administra los sabores'}}</h2><p class="flavor-card-description">{{categoriaId ? 'Agrega opciones para que estén listas al crear un producto.' : 'Elige una categoría para comenzar.'}}</p></div>
+        @if(categoriaId){<span class="flavor-total-pill"><svg lucideTags [size]="14"></svg>{{saboresActuales.length}} {{saboresActuales.length===1?'sabor':'sabores'}}</span>}
+      </div>
+      @if(!categoriaId){
+        <div class="flavor-empty flavor-empty-start"><span class="flavor-empty-icon"><svg lucideTags [size]="22"></svg></span><strong>Elige dónde organizar tus sabores</strong><p>Selecciona una categoría de la lista para agregar o quitar opciones.</p></div>
+      } @else {
+        <form (ngSubmit)="agregar()" class="flavor-add-form">
+          <label for="nuevo-sabor" class="flavor-input-label">Nombre del sabor</label>
+          <div class="flavor-input-row"><div class="flavor-input-wrap"><svg lucideTags [size]="17"></svg><input id="nuevo-sabor" name="nombre" [(ngModel)]="nombre" maxlength="100" autocomplete="off" class="flavor-name-input" placeholder="Por ejemplo, fresa" [disabled]="guardando"></div><button type="submit" [disabled]="!nombre.trim() || guardando" class="admin-btn admin-btn-primary flavor-submit"><svg lucidePlus [size]="16"></svg>{{guardando?'Guardando…':'Agregar sabor'}}</button></div>
+          <p class="flavor-input-hint">Se agregará a <strong>{{categoriaNombre()}}</strong> y estará disponible en el formulario de producto.</p>
+        </form>
+        <div class="flavor-list-header"><div><h3>Opciones disponibles</h3><p>Quita un sabor si ya no quieres ofrecerlo en esta categoría.</p></div></div>
+        <div class="flavor-chip-list">
+          @for(flavor of saboresActuales;track flavor){<div class="flavor-admin-chip"><span class="flavor-chip-dot"></span><span class="flavor-chip-name">{{flavor}}</span><button type="button" (click)="quitar(flavor)" [attr.aria-label]="'Quitar '+flavor+' de '+categoriaNombre()" title="Quitar sabor"><svg lucideTrash2 [size]="15"></svg></button></div>}
+          @empty {<div class="flavor-empty"><span class="flavor-empty-icon"><svg lucideTags [size]="20"></svg></span><strong>Aún no hay sabores</strong><p>Agrega el primero con el campo de arriba.</p></div>}
+        </div>
+      }
+    </section>
+  </div>
+</section>

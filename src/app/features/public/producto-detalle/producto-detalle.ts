@@ -17,21 +17,16 @@ export class ProductoDetalle implements OnInit {
   readonly config = inject(ConfiguracionStore);
   private readonly route = inject(ActivatedRoute);
   private readonly productId = toSignal(this.route.paramMap.pipe(map(params => Number(params.get('id')))), { initialValue: Number(this.route.snapshot.paramMap.get('id')) });
-  readonly producto = computed(() => this.store.productos().find(p => p.intProLlave === this.productId()) || null);
-  readonly relacionados = computed(() => this.store.productos().filter(p => p.intCtgLlave === this.producto()?.intCtgLlave && p.intProLlave !== this.productId()).slice(0, 4));
+  readonly producto = computed(() => this.store.productos().find(p => p.id === this.productId()) || null);
+  readonly relacionados = computed(() => this.store.productos().filter(p => p.categoria.id === this.producto()?.categoria.id && p.id !== this.productId()).slice(0, 4));
+  fotoSeleccionada: string | null = null;
 
   ngOnInit(): void { this.store.cargar(); }
-  categoriaNombre(id?: number): string { return this.store.categorias().find(c => c.intCtgLlave === id)?.strCtgNombre || 'Hecho en casa'; }
-  tallas(id: number) { return this.store.tallasProducto(id).filter(t => t.strTalEstadoDisponibilidad !== 'out_of_stock'); }
-  variantes(id: number) { return this.store.variantesProducto(id); }
-  detalleVariante(v: { strVarTextura?: string; strVarForma?: string; strVarColor?: string }): string {
-    return [v.strVarTextura, v.strVarForma, v.strVarColor].filter(value => !!value).join(' · ');
-  }
-  disponibilidad(estado?: string): string { return estado === 'out_of_stock' ? 'Agotado' : estado === 'on_demand' ? 'Sobre pedido' : 'Disponible'; }
+  imagenActual(): string | null { const fotos = this.producto()?.fotos || []; return (this.fotoSeleccionada && fotos.some(foto => foto.url === this.fotoSeleccionada) ? this.fotoSeleccionada : null) || fotos.find(foto => foto.principal)?.url || fotos[0]?.url || null; }
+  disponibilidad(estado?: string): string { return estado === 'agotado' ? 'Agotado' : estado === 'sobre_pedido' ? 'Sobre pedido' : 'Disponible'; }
   telefono(): string | null { return this.config.telefonos().find(t => t.blnTelPrincipal)?.strTelNumero || this.config.telefonos()[0]?.strTelNumero || null; }
   whatsappUrl(nombre: string): string | null {
     const phone = this.telefono()?.replace(/\D/g, '');
     return phone ? `https://wa.me/${phone}?text=${encodeURIComponent(`Hola, me interesa ${nombre}. ¿Me pueden compartir más información?`)}` : null;
   }
-  rating(id: number) { return this.store.resumenCalificacion(id); }
 }

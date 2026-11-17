@@ -22,8 +22,8 @@ export class Categorias implements OnInit {
   editar(c: Categoria): void { this.seleccionado = c; this.mostrarForm = true; this.vistaMovil.set('formulario'); }
   cerrarForm(): void { this.mostrarForm = false; this.seleccionado = null; this.vistaMovil.set('lista'); }
   guardar(data: Partial<Categoria>): void {
-    if (this.seleccionado?.intCtgLlave) {
-      this.store.actualizar(this.seleccionado.intCtgLlave, data, () => this.cerrarForm());
+    if (this.seleccionado?.id) {
+      this.store.actualizar(this.seleccionado.id, data, () => this.cerrarForm());
     } else {
       this.store.crear(data, () => this.cerrarForm());
     }

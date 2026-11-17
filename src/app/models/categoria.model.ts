@@ -1,1 +1,7 @@
-export interface Categoria { intCtgLlave?: number; strCtgNombre: string; strCtgDescripcion?: string; blnCtgActivo?: boolean; }
+export interface Categoria {
+  id: number;
+  nombre: string;
+  descripcion: string | null;
+  idPadre: number | null;
+  activa: boolean;
+}

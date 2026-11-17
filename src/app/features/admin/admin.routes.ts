@@ -8,6 +8,7 @@ export const ADMIN_ROUTES: Routes = [
       { path: '', redirectTo: 'usuarios', pathMatch: 'full' },
       { path: 'usuarios', loadComponent: () => import('./usuarios/usuarios/usuarios').then(m => m.Usuarios) },
       { path: 'categorias', loadComponent: () => import('./categorias/categorias/categorias').then(m => m.Categorias) },
+      { path: 'sabores', loadComponent: () => import('./sabores/sabores').then(m => m.SaboresAdmin) },
       { path: 'productos', loadComponent: () => import('./productos/productos/productos').then(m => m.Productos) },
       { path: 'pedidos', loadComponent: () => import('./pedidos/pedidos/pedidos').then(m => m.Pedidos) },
       { path: 'galerias', loadComponent: () => import('./galerias/galerias/galerias').then(m => m.Galerias) },
