@@ -1,4 +1,4 @@
-<main class="mx-auto min-h-[70vh] max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+<main class="public-page-shell">
   <nav class="mb-6 flex flex-wrap items-center gap-2 text-xs text-secondary" aria-label="Ruta de navegación">
     <a routerLink="/" class="crumb-link">Inicio</a><span aria-hidden="true">/</span><a routerLink="/catalogo" class="crumb-link">Catálogo</a><span aria-hidden="true">/</span><span class="text-primary">{{ producto()?.nombre || 'Detalle del producto' }}</span>
   </nav>
@@ -21,6 +21,6 @@
         <p class="order-note">Los pedidos especiales se confirman directamente con la pastelería.</p>
       </div>
     </section>
-    @if (relacionados().length) { <section class="related-section"><div class="related-heading"><div><p class="section-kicker">MÁS ANTOJOS</p><h2>También te puede gustar</h2></div><a routerLink="/catalogo" class="back-link">Ver catálogo →</a></div><div class="related-grid">@for (rel of relacionados(); track rel.id) { <a [routerLink]="['/producto', rel.id]" class="related-card"><span>{{ rel.categoria.nombre }}</span><strong>{{ rel.nombre }}</strong><small>Ver detalles →</small></a> }</div></section> }
+    @if (relacionados().length) { <section class="related-section"><div class="related-heading"><div><p class="section-kicker">MÁS ANTOJOS</p><h2>También te puede gustar</h2></div><a routerLink="/catalogo" class="back-link">Ver catálogo →</a></div><div class="related-grid">@for (rel of relacionados(); track rel.id) { <a [routerLink]="['/producto', rel.id]" class="related-card public-card"><span>{{ rel.categoria.nombre }}</span><strong>{{ rel.nombre }}</strong><small>Ver detalles →</small></a> }</div></section> }
   } }
 </main>

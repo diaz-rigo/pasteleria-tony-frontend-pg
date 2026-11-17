@@ -31,6 +31,18 @@ input:focus,textarea:focus,select:focus { box-shadow:0 0 0 3px color-mix(in srgb
 .text-primary { color:var(--text-primary); }
 .text-secondary { color:var(--text-secondary); }
 .thin-scrollbar { scrollbar-width:thin; scrollbar-color:rgba(10,10,10,.18) transparent; }
+.public-page-shell { width:min(100%,80rem); min-height:70vh; margin-inline:auto; padding:clamp(1.5rem,4vw,3rem) clamp(1rem,4vw,2rem); }
+.public-page-heading { max-width:48rem; margin:0 0 clamp(1.5rem,3vw,2.25rem); }
+.public-page-heading h1,.public-display-title { color:var(--text-primary); font-size:clamp(2rem,4.8vw,3.2rem); font-weight:750; letter-spacing:-.045em; line-height:1.08; }
+.public-page-heading p { max-width:60ch; margin-top:.75rem; color:var(--text-secondary); font-size:.92rem; line-height:1.7; }
+.public-kicker { color:var(--accent); font-size:.68rem; font-weight:750; letter-spacing:.16em; text-transform:uppercase; }
+.public-card { overflow:hidden; border:1px solid var(--line); border-radius:1.15rem; background:var(--surface); box-shadow:0 5px 20px rgb(48 37 31 / 4%); transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
+.public-card:hover { transform:translateY(-2px); border-color:color-mix(in srgb,var(--accent) 22%,var(--line)); box-shadow:0 12px 30px rgb(48 37 31 / 9%); }
+.public-page-shell .public-card,.hero-wrap .public-card { border-radius:1.15rem; }
+.public-page-shell .public-card:hover,.hero-wrap .public-card:hover { transform:translateY(-2px); border-color:color-mix(in srgb,var(--accent) 22%,var(--line)); box-shadow:0 12px 30px rgb(48 37 31 / 9%); }
+.public-action { display:inline-flex; min-height:2.9rem; align-items:center; justify-content:center; gap:.55rem; border-radius:999px; padding:.65rem 1.1rem; font-size:.82rem; font-weight:700; transition:background .16s ease,color .16s ease,transform .16s ease; }
+.public-action:focus-visible,.filter-chip:focus-visible,.nav-link:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+@media(max-width:639px) { .public-page-shell { padding:1.5rem 1rem 2.5rem; } .public-page-heading { margin-bottom:1.35rem; } }
 .image-placeholder { display:grid; width:100%; height:100%; min-height:150px; place-items:center; background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--accent) 12%,var(--surface)),var(--accent-soft)); color:var(--accent); font-size:34px; }
 .admin-page { width:min(100%,1480px); margin-inline:auto; padding:clamp(1rem,2.5vw,2rem); }
 .admin-page-heading { display:flex; min-width:0; align-items:flex-end; justify-content:space-between; gap:1rem; margin-bottom:clamp(1rem,2vw,1.5rem); }
