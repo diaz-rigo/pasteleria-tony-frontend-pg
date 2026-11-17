@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PortafoliosStore } from '../../../../store/portafolios/portafolios.store';
+import { CloudinaryImagePipe } from '../../../../shared/pipes/cloudinary-image.pipe';
 
 @Component({
   selector: 'app-portafolio',
-  imports: [],
+  imports: [CloudinaryImagePipe],
   templateUrl: './portafolio.html',
   styleUrl: './portafolio.css',
 })

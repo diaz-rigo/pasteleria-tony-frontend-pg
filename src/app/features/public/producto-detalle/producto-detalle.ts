@@ -5,10 +5,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { ConfiguracionStore } from '../../../store/configuracion/configuracion.store';
 import { ProductosStore } from '../../../store/productos/productos.store';
+import { CloudinaryImagePipe } from '../../../shared/pipes/cloudinary-image.pipe';
 
 @Component({
   selector: 'app-producto-detalle',
-  imports: [CurrencyPipe, DecimalPipe, RouterLink],
+  imports: [CurrencyPipe, DecimalPipe, RouterLink, CloudinaryImagePipe],
   templateUrl: './producto-detalle.html',
   styleUrl: './producto-detalle.css',
 })

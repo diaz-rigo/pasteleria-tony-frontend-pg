@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../../models/usuario.model';
+import { optimizarImagenSubida } from '../utils/cloudinary-image.util';
 
 type SeccionImagen = 'galerias' | 'portafolio' | 'configuracion';
 interface FirmaImagen { nombreNube: string; claveApi: string; marcaTemporal: number; carpeta: string; firma: string; }
@@ -14,11 +15,12 @@ export class SubidaImagenService {
 
   async subir(archivo: File, seccion: SeccionImagen): Promise<string> {
     this.validar(archivo);
+    const imagenOptimizada = await optimizarImagenSubida(archivo);
     const firmaRespuesta = await firstValueFrom(this.http.post<ApiResponse<FirmaImagen>>(`${environment.apiUrl}/cloudinary/upload-signature`, { seccion }));
     if (!firmaRespuesta.ok || !firmaRespuesta.data) throw new Error(firmaRespuesta.mensaje || 'No se pudo preparar la carga de imagen.');
     const firma = firmaRespuesta.data;
     const formulario = new FormData();
-    formulario.append('file', archivo);
+    formulario.append('file', imagenOptimizada);
     formulario.append('api_key', firma.claveApi);
     formulario.append('timestamp', String(firma.marcaTemporal));
     formulario.append('folder', firma.carpeta);

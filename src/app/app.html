@@ -5,7 +5,7 @@
   <div class="footer-content">
     <section class="footer-brand-column">
       <a routerLink="/" class="footer-brand" [attr.aria-label]="(config.config()?.strCfgNombreNegocio || 'Pastelería Tony') + ', inicio'">
-        @if(config.config()?.strCfgUrlLogo){<img [src]="config.config()?.strCfgUrlLogo" alt="" class="footer-logo">}@else{<span class="footer-logo-placeholder">✿</span>}
+        @if(config.config()?.strCfgUrlLogo){<img [src]="config.config()?.strCfgUrlLogo | cloudinaryImage:180" alt="" class="footer-logo" loading="lazy" decoding="async">}@else{<span class="footer-logo-placeholder">✿</span>}
         <span>{{config.config()?.strCfgNombreNegocio || 'Pastelería Tony'}}</span>
       </a>
       <p class="footer-description">{{footerText || 'Hecho con cariño, para compartir momentos especiales.'}}</p>

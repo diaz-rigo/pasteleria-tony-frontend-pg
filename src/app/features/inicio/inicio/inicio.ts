@@ -4,10 +4,11 @@ import { RouterLink } from '@angular/router';
 import { ProductosStore } from '../../../store/productos/productos.store';
 import { ConfiguracionStore } from '../../../store/configuracion/configuracion.store';
 import { LucideCakeSlice } from '@lucide/angular';
+import { CloudinaryImagePipe } from '../../../shared/pipes/cloudinary-image.pipe';
 
 @Component({
   selector: 'app-inicio',
-  imports: [RouterLink, CurrencyPipe, LucideCakeSlice],
+  imports: [RouterLink, CurrencyPipe, LucideCakeSlice, CloudinaryImagePipe],
   templateUrl: './inicio.html',
   styleUrl: './inicio.css',
 })

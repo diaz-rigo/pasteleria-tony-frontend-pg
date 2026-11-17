@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { ProductosStore } from '../../../../store/productos/productos.store';
 import { LucideSearch } from '@lucide/angular';
 import { RouterLink } from '@angular/router';
+import { CloudinaryImagePipe } from '../../../../shared/pipes/cloudinary-image.pipe';
 
-@Component({ selector:'app-catalogo', imports:[FormsModule,LucideSearch,CurrencyPipe,DecimalPipe,RouterLink], templateUrl:'./catalogo.html', styleUrl:'./catalogo.css' })
+@Component({ selector:'app-catalogo', imports:[FormsModule,LucideSearch,CurrencyPipe,DecimalPipe,RouterLink,CloudinaryImagePipe], templateUrl:'./catalogo.html', styleUrl:'./catalogo.css' })
 export class Catalogo implements OnInit {
   readonly store=inject(ProductosStore);
   readonly busqueda=signal('');

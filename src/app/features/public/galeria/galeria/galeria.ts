@@ -1,9 +1,10 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { GaleriasStore } from '../../../../store/galerias/galerias.store';
+import { CloudinaryImagePipe } from '../../../../shared/pipes/cloudinary-image.pipe';
 
 @Component({
   selector: 'app-galeria',
-  imports: [],
+  imports: [CloudinaryImagePipe],
   templateUrl: './galeria.html',
   styleUrl: './galeria.css',
 })

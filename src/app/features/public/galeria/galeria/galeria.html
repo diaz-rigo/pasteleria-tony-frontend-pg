@@ -4,15 +4,15 @@
   @else if (store.error()) { <div class="public-empty"><span>☁</span><strong>No pudimos cargar la galería</strong><p>Revisa tu conexión e inténtalo de nuevo.</p><button class="retry-button" (click)="store.cargar()">Intentar de nuevo</button></div> }
   @else {
     <div class="gallery-grid">
-      @for (g of galeriasPublicas(); track g.intGalLlave) {
+      @for (g of galeriasPublicas(); track g.intGalLlave; let first = $first) {
         <article class="gallery-card public-card">
           <div class="gallery-photo">
-            @if (store.imagenesDe(g.intGalLlave || 0)[0]; as portada) { <img [src]="portada.strImgUrl" [alt]="portada.strImgLeyenda || g.strGalTitulo" loading="lazy"> }
+            @if (store.imagenesDe(g.intGalLlave || 0)[0]; as portada) { <img [src]="portada.strImgUrl | cloudinaryImage:1000" [alt]="portada.strImgLeyenda || g.strGalTitulo" [attr.loading]="first ? 'eager' : 'lazy'" [attr.fetchpriority]="first ? 'high' : 'auto'" decoding="async"> }
             @else { <div class="gallery-image-placeholder" aria-hidden="true">✿</div> }
             @if(g.blnGalDestacado){<span class="gallery-badge">Destacado</span>}
           </div>
           <div class="gallery-caption"><div><h2>{{g.strGalTitulo}}</h2><p>{{g.strGalDescripcion||g.strGalSaborRelacionado||'Un detalle dulce para compartir.'}}</p><div class="gallery-tags">@for(categoria of store.categoriasDe(g.intGalLlave||0);track categoria.intGctLlave){<span>{{categoria.strGctNombre}}</span>}@for(etiqueta of store.etiquetasDe(g.intGalLlave||0);track etiqueta.intEtiLlave){<span>#{{etiqueta.strEtiNombre}}</span>}</div></div></div>
-          @if (store.imagenesDe(g.intGalLlave || 0).length > 1) { <div class="gallery-thumbnails" aria-label="Más imágenes de esta galería">@for (imagen of store.imagenesDe(g.intGalLlave || 0).slice(1); track imagen.intImgLlave) { <img [src]="imagen.strImgUrl" [alt]="imagen.strImgLeyenda || g.strGalTitulo" loading="lazy"> }</div> }
+          @if (store.imagenesDe(g.intGalLlave || 0).length > 1) { <div class="gallery-thumbnails" aria-label="Más imágenes de esta galería">@for (imagen of store.imagenesDe(g.intGalLlave || 0).slice(1); track imagen.intImgLlave) { <img [src]="imagen.strImgUrl | cloudinaryImage:360" [alt]="imagen.strImgLeyenda || g.strGalTitulo" loading="lazy" decoding="async"> }</div> }
         </article>
       } @empty { <div class="public-empty"><span>♡</span><strong>Estamos preparando la galería</strong><p>Muy pronto compartiremos más momentos dulces.</p></div> }
     </div>

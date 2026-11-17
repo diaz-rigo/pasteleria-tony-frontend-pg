@@ -1,7 +1,7 @@
 <header class="sticky top-0 z-40 border-b backdrop-blur-xl" [style.background-color]="config.config()?.strCfgColorFondoEncabezado || null" style="background:color-mix(in srgb,var(--app-bg) 92%,transparent);border-color:var(--line);padding-top:env(safe-area-inset-top)">
   <div class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
     <a routerLink="/" (click)="cerrarMenu()" class="flex min-h-11 items-center gap-2.5" aria-label="Pastelería Tony, inicio">
-      @if(config.config()?.strCfgUrlLogo && config.config()?.blnCfgMostrarImagenEncabezado !== false){<img class="h-10 w-10 rounded-full object-cover" [src]="config.config()?.strCfgUrlLogo" [alt]="config.config()?.strCfgNombreNegocio || 'Logotipo'">}@else{<span class="grid h-10 w-10 place-items-center rounded-full text-white" style="background:var(--accent)"><svg lucideCakeSlice [size]="20" [strokeWidth]="1.7"></svg></span>}
+      @if(config.config()?.strCfgUrlLogo && config.config()?.blnCfgMostrarImagenEncabezado !== false){<img class="h-10 w-10 rounded-full object-cover" [src]="config.config()?.strCfgUrlLogo | cloudinaryImage:160" [alt]="config.config()?.strCfgNombreNegocio || 'Logotipo'" fetchpriority="high" decoding="async">}@else{<span class="grid h-10 w-10 place-items-center rounded-full text-white" style="background:var(--accent)"><svg lucideCakeSlice [size]="20" [strokeWidth]="1.7"></svg></span>}
       <span><span class="block font-display text-lg font-semibold leading-5">{{ config.config()?.strCfgNombreNegocio || 'Pastelería Tony' }}</span><span class="hidden text-[10px] uppercase tracking-[.2em] text-secondary sm:block">Hecho con cariño</span></span>
     </a>
     <nav class="hidden items-center gap-1 md:flex" aria-label="Navegación principal">

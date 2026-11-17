@@ -8,10 +8,11 @@ import { ConfirmDialogService } from './shared/components/confirm-dialog/confirm
 import { Header } from './shared/layout/header/header';
 import { ConfiguracionStore } from './store/configuracion/configuracion.store';
 import { ThemeService } from './core/theme/theme.service';
+import { CloudinaryImagePipe } from './shared/pipes/cloudinary-image.pipe';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, Header, LucideAlertTriangle, LucideCheck, LucideInfo, LucideX],
+  imports: [RouterOutlet, RouterLink, Header, LucideAlertTriangle, LucideCheck, LucideInfo, LucideX, CloudinaryImagePipe],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

@@ -12,7 +12,7 @@
         <div class="mt-8 flex items-center gap-3 text-xs text-secondary"><span class="flex -space-x-2"><span class="avatar-dot">♡</span><span class="avatar-dot">✿</span></span><span><strong class="text-primary">Hecho al momento</strong><br>para celebrar contigo</span></div>
       </div>
       @if(config.config()?.blnCfgMostrarImagenHero !== false){<div class="hero-art order-1 lg:order-2">
-        @if(config.config()?.strCfgUrlImagenHero){<img [src]="config.config()?.strCfgUrlImagenHero" [alt]="config.config()?.strCfgNombreNegocio || 'Creación de repostería'" fetchpriority="high" />}@else{<div class="hero-illustration"><span class="hero-cake-icon"><svg lucideCakeSlice [size]="86" [strokeWidth]="1.15"></svg></span><div class="hero-illustration-copy"><span>Hecho con cariño</span><strong>Un sabor para recordar</strong></div></div>}
+        @if(config.config()?.strCfgUrlImagenHero){<img [src]="config.config()?.strCfgUrlImagenHero | cloudinaryImage:1400" [alt]="config.config()?.strCfgNombreNegocio || 'Creación de repostería'" loading="eager" fetchpriority="high" decoding="async" />}@else{<div class="hero-illustration"><span class="hero-cake-icon"><svg lucideCakeSlice [size]="86" [strokeWidth]="1.15"></svg></span><div class="hero-illustration-copy"><span>Hecho con cariño</span><strong>Un sabor para recordar</strong></div></div>}
         <div class="photo-note"><span><strong>Momentos para saborear</strong><small>Una receta para cada ocasión</small></span></div>
       </div>}
     </div>
@@ -24,7 +24,7 @@
       <div class="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
         @for (p of productos.productos().slice(0,4); track p.id) {
           <article class="product-card">
-            <a [routerLink]="['/producto',p.id]" class="product-photo" [attr.aria-label]="'Ver ' + p.nombre">@if(productImage(p.id)){<img [src]="productImage(p.id)" [alt]="p.nombre" loading="lazy">}@else{<span class="image-placeholder" aria-hidden="true">✿</span>}@if(p.destacado){<span class="product-tag">Destacado</span>}</a>
+            <a [routerLink]="['/producto',p.id]" class="product-photo" [attr.aria-label]="'Ver ' + p.nombre">@if(productImage(p.id)){<img [src]="productImage(p.id) | cloudinaryImage:640" [alt]="p.nombre" loading="lazy" decoding="async">}@else{<span class="image-placeholder" aria-hidden="true">✿</span>}@if(p.destacado){<span class="product-tag">Destacado</span>}</a>
             <div class="p-3.5 sm:p-4"><p class="text-[10px] uppercase tracking-[.15em] text-secondary">{{ p.categoria.nombre || p.marca || 'Repostería Tony' }}</p><h3 class="mt-1 truncate text-base font-semibold sm:text-lg"><a [routerLink]="['/producto',p.id]">{{ p.nombre }}</a></h3><p class="mt-1 line-clamp-2 text-xs leading-5 text-secondary">{{ p.descripcion || 'Elaborado con ingredientes frescos y una receta especial.' }}</p>@if(precioDesde(p.id); as precio){<p class="mt-2 text-sm font-semibold" style="color:var(--accent)">{{ precio | currency:'MXN':'symbol-narrow':'1.0-0' }} <span class="text-[10px] font-normal text-secondary">desde</span></p>}</div>
           </article>
         } @empty { <div class="col-span-full rounded-2xl border border-dashed p-8 text-center text-sm text-secondary" style="border-color:var(--line)">Pronto encontrarás aquí nuestros productos favoritos.</div> }

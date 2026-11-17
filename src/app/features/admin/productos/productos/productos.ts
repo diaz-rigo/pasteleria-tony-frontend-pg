@@ -8,6 +8,7 @@ import { ProductoList } from '../producto-list/producto-list';
 import { DatosFormularioProducto, ProductoForm } from '../producto-form/producto-form';
 import { FotoProducto, Producto } from '../../../../models/producto.model';
 import { LucideAlertTriangle, LucidePlus, LucideRefreshCw } from '@lucide/angular';
+import { optimizarImagenSubida } from '../../../../shared/utils/cloudinary-image.util';
 
 interface RespuestaCargaFoto { secure_url: string; }
 
@@ -40,15 +41,16 @@ export class Productos implements OnInit {
       const idActual = this.productoSeleccionado?.id || this.productoBorradorId || undefined;
       const producto = await this.productos.guardarPublicacion(datos.publicacion, idActual);
       if (!this.productoSeleccionado) this.productoBorradorId = producto.id;
-      for (const foto of datos.archivos) {
-        if (foto.urlCargada) continue;
+      await Promise.all(datos.archivos.map(async foto => {
+        if (foto.urlCargada) return;
+        const imagenOptimizada = await optimizarImagenSubida(foto.archivo);
         const respuestaFirma = await firstValueFrom(this.api.firmarCargaFoto(producto.id));
         if (!respuestaFirma.ok || !respuestaFirma.data) throw new Error(respuestaFirma.mensaje || 'No se pudo preparar la carga de fotos.');
         const firma: FirmaCargaFoto = respuestaFirma.data;
-        const carga = new FormData(); carga.append('file', foto.archivo); carga.append('api_key', firma.claveApi); carga.append('timestamp', String(firma.marcaTemporal)); carga.append('folder', firma.carpeta); carga.append('signature', firma.firma);
+        const carga = new FormData(); carga.append('file', imagenOptimizada); carga.append('api_key', firma.claveApi); carga.append('timestamp', String(firma.marcaTemporal)); carga.append('folder', firma.carpeta); carga.append('signature', firma.firma);
         const subida = await firstValueFrom(this.http.post<RespuestaCargaFoto>(`https://api.cloudinary.com/v1_1/${firma.nombreNube}/image/upload`, carga));
         foto.urlCargada = subida.secure_url;
-      }
+      }));
       if (datos.archivos.length || datos.fotosEliminar.length) {
         await this.productos.guardarFotos(producto.id, datos.archivos.map(foto => foto.urlCargada).filter((url): url is string => !!url), datos.fotosEliminar);
       }
