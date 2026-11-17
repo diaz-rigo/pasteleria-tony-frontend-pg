@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Producto } from '../../../../models/producto.model';
 import { Categoria } from '../../../../models/categoria.model';
+import { LucideLoader2, LucidePackage, LucidePencil, LucideTrash2 } from '@lucide/angular';
 
 @Component({
   selector: 'app-producto-list',
-  imports: [],
+  imports: [LucideLoader2, LucidePackage, LucidePencil, LucideTrash2],
   templateUrl: './producto-list.html',
   styleUrl: './producto-list.css',
 })

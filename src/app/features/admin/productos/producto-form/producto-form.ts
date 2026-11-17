@@ -2,16 +2,18 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Categoria } from '../../../../models/categoria.model';
 import { Producto } from '../../../../models/producto.model';
+import { LucideSave, LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'app-producto-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LucideSave, LucideX],
   templateUrl: './producto-form.html',
   styleUrl: './producto-form.css',
 })
 export class ProductoForm {
   @Input() producto: Producto | null = null;
   @Input() categorias: Categoria[] = [];
+  @Input() bloquearAcciones = false;
   @Output() guardar = new EventEmitter<Partial<Producto>>();
   @Output() cancelar = new EventEmitter<void>();
 

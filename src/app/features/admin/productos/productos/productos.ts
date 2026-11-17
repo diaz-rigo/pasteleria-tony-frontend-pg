@@ -5,10 +5,11 @@ import { ProductoList } from '../producto-list/producto-list';
 import { ProductoForm } from '../producto-form/producto-form';
 import { Producto } from '../../../../models/producto.model';
 import { ProductoVarianteImagen } from '../producto-variante-imagen/producto-variante-imagen';
+import { LucideAlertTriangle, LucidePlus, LucideRefreshCw } from '@lucide/angular';
 
 @Component({
   selector: 'app-productos',
-  imports: [ProductoList, ProductoForm, ProductoVarianteImagen],
+  imports: [ProductoList, ProductoForm, ProductoVarianteImagen, LucideAlertTriangle, LucidePlus, LucideRefreshCw],
   templateUrl: './productos.html',
   styleUrl: './productos.css',
 })
@@ -16,6 +17,7 @@ export class Productos implements OnInit {
   readonly store = inject(ProductosStore);
   readonly categoriasStore = inject(CategoriasStore);
   mostrarForm = false;
+  cargaImagenesEnCurso = false;
   readonly vistaMovil = signal<'lista' | 'formulario'>('lista');
   seleccionado: Producto | null = null;
 

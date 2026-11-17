@@ -2,7 +2,7 @@
   <header class="admin-mobile-header">
     <button type="button" class="admin-menu-button" (click)="menuMovil.set(true)" aria-label="Abrir menú de administración" [attr.aria-expanded]="menuMovil()"><svg lucideMenu [size]="20"></svg></button>
     <a routerLink="/admin" class="admin-brand"><span class="admin-brand-mark">T</span><span>Panel de gestión</span></a>
-    <a routerLink="/" class="admin-site-link">Ver sitio</a>
+    <a routerLink="/" class="admin-site-link"><svg lucideExternalLink [size]="14"></svg>Ver sitio</a>
   </header>
   <aside class="admin-sidebar" aria-label="Navegación de administración">
     <a routerLink="/admin" class="admin-sidebar-brand"><span class="admin-brand-mark">T</span><span><strong>Pastelería Tony</strong><small>Administración</small></span></a>
@@ -16,7 +16,7 @@
       <a routerLink="portafolios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideBriefcaseBusiness [size]="18"></svg>Portafolios</a>
       <a routerLink="configuracion" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideSettings [size]="18"></svg>Configuración</a>
     </nav>
-    <a routerLink="/" class="admin-back-site">← Volver al sitio público</a>
+    <a routerLink="/" class="admin-back-site"><svg lucideArrowLeft [size]="16"></svg>Volver al sitio público</a>
   </aside>
   @if(menuMovil()){
     <div class="admin-drawer-layer" role="dialog" aria-modal="true" aria-label="Menú de administración">
@@ -26,7 +26,7 @@
         <p class="admin-nav-label">GESTIÓN</p>
         <nav class="admin-nav">
           <a routerLink="usuarios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideUsers [size]="18"></svg>Usuarios</a><a routerLink="categorias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideTags [size]="18"></svg>Categorías</a><a routerLink="productos" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucidePackage [size]="18"></svg>Productos</a><a routerLink="pedidos" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideShoppingBag [size]="18"></svg>Pedidos</a><a routerLink="galerias" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideImages [size]="18"></svg>Galerías</a><a routerLink="portafolios" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideBriefcaseBusiness [size]="18"></svg>Portafolios</a><a routerLink="configuracion" routerLinkActive="admin-nav-active" (click)="cerrarMenu()"><svg lucideSettings [size]="18"></svg>Configuración</a>
-        </nav><a routerLink="/" class="admin-back-site" (click)="cerrarMenu()">← Volver al sitio público</a>
+        </nav><a routerLink="/" class="admin-back-site" (click)="cerrarMenu()"><svg lucideArrowLeft [size]="16"></svg>Volver al sitio público</a>
       </aside>
     </div>
   }

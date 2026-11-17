@@ -2,8 +2,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PortafoliosStore } from '../../../../store/portafolios/portafolios.store';
 import { Portafolio } from '../../../../models/portafolio.model';
+import { LucideAlertTriangle, LucideBriefcaseBusiness, LucideLoader2, LucidePencil, LucidePlus, LucideRefreshCw, LucideSave, LucideTrash2, LucideX } from '@lucide/angular';
 
-@Component({ selector:'app-portafolios', imports:[ReactiveFormsModule], templateUrl:'./portafolios.html', styleUrl:'./portafolios.css' })
+@Component({ selector:'app-portafolios', imports:[ReactiveFormsModule,LucideAlertTriangle,LucideBriefcaseBusiness,LucideLoader2,LucidePencil,LucidePlus,LucideRefreshCw,LucideSave,LucideTrash2,LucideX], templateUrl:'./portafolios.html', styleUrl:'./portafolios.css' })
 export class Portafolios implements OnInit {
   readonly store=inject(PortafoliosStore);
   readonly vistaMovil=signal<'lista'|'formulario'>('lista');

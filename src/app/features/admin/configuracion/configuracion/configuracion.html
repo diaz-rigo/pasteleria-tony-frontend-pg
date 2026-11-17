@@ -23,6 +23,6 @@
     <h2 class="admin-card-title sm:col-span-2 sm:mt-2">Buscadores</h2>
     <label class="sm:col-span-2"><span class="admin-label">Título meta</span><input formControlName="strCfgTituloMeta" class="admin-input"></label>
     <label class="sm:col-span-2"><span class="admin-label">Descripción meta</span><textarea formControlName="strCfgDescripcionMeta" rows="3" class="admin-input"></textarea></label>
-    <div class="flex flex-col-reverse gap-2 border-t pt-4 sm:col-span-2 sm:flex-row sm:justify-end" style="border-color:var(--line)"><button type="button" (click)="form.reset(store.config() || {})" class="admin-btn admin-btn-secondary">Descartar cambios</button><button type="submit" class="admin-btn admin-btn-primary">Guardar configuración</button></div>
+    <div class="flex flex-col-reverse gap-2 border-t pt-4 sm:col-span-2 sm:flex-row sm:justify-end" style="border-color:var(--line)"><button type="button" (click)="form.reset(store.config() || {})" class="admin-btn admin-btn-secondary"><svg lucideUndo2 [size]="16"></svg>Descartar cambios</button><button type="submit" class="admin-btn admin-btn-primary"><svg lucideSave [size]="16"></svg>Guardar configuración</button></div>
   </form>
 </section>

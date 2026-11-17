@@ -8,5 +8,5 @@
   <label><span class="admin-label">Rol</span><select formControlName="strUsuRol" class="admin-input"><option value="CLIENT">Cliente</option><option value="ADMIN">Administrador</option></select></label>
   <label><span class="admin-label">Estado</span><select formControlName="strUsuEstado" class="admin-input"><option value="ACTIVE">Activo</option><option value="INACTIVE">Inactivo</option></select></label>
   @if(form.invalid&&form.touched){<p class="sm:col-span-2 text-xs font-medium text-red-700" role="alert">Revisa los campos obligatorios antes de guardar.</p>}
-  <div class="flex flex-col-reverse gap-2 sm:col-span-2 sm:flex-row sm:justify-end"><button type="button" (click)="cancelar.emit()" class="admin-btn admin-btn-secondary">Cancelar</button><button type="submit" [disabled]="form.invalid" class="admin-btn admin-btn-primary disabled:cursor-not-allowed disabled:opacity-50">Guardar usuario</button></div>
+  <div class="flex flex-col-reverse gap-2 sm:col-span-2 sm:flex-row sm:justify-end"><button type="button" (click)="cancelar.emit()" class="admin-btn admin-btn-secondary"><svg lucideX [size]="16"></svg>Cancelar</button><button type="submit" [disabled]="form.invalid" class="admin-btn admin-btn-primary disabled:cursor-not-allowed disabled:opacity-50"><svg lucideSave [size]="16"></svg>Guardar usuario</button></div>
 </form>

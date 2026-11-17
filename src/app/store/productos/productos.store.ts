@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
+import { firstValueFrom, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProductosService } from './productos.service';
 import { ToastService } from '../../shared/components/toast/toast.service';
@@ -85,15 +85,21 @@ export class ProductosStore {
   }
   crearVariante(data: Partial<VarianteProducto>, onDone?: (variante?: VarianteProducto) => void): void {
     this.http.crearVariante(data).subscribe({
-      next: res => { if (res.ok && res.data) { this.variantes.update(items => [...items, res.data!]); this.toast.success('Variante agregada'); onDone?.(res.data); } else this.toast.error(res.mensaje || 'No se pudo agregar la variante'); },
-      error: () => this.toast.error('Error al agregar la variante'),
+      next: res => { if (res.ok && res.data) { this.variantes.update(items => [...items, res.data!]); this.toast.success('Variante agregada'); onDone?.(res.data); } else { this.toast.error(res.mensaje || 'No se pudo agregar la variante'); onDone?.(); } },
+      error: () => { this.toast.error('Error al agregar la variante'); onDone?.(); },
     });
   }
-  crearImagenVariante(data: Partial<ImagenVariante>, onDone?: () => void): void {
-    this.http.crearImagenVariante(data).subscribe({
-      next: res => { if (res.ok && res.data) { this.imagenes.update(items => [...items, res.data!]); this.toast.success('Imagen agregada'); onDone?.(); } else this.toast.error(res.mensaje || 'No se pudo agregar la imagen'); },
-      error: () => this.toast.error('Error al agregar la imagen'),
-    });
+  async crearImagenVariante(data: Partial<ImagenVariante>): Promise<ImagenVariante> {
+    try {
+      const res = await firstValueFrom(this.http.crearImagenVariante(data));
+      if (!res.ok || !res.data) throw new Error(res.mensaje || 'No se pudo guardar la imagen.');
+      this.imagenes.update(items => [...items, res.data!]);
+      this.toast.success('Imagen agregada al producto');
+      return res.data;
+    } catch (error) {
+      this.toast.error(error instanceof Error ? error.message : 'Error al guardar la imagen');
+      throw error;
+    }
   }
   async eliminarImagenVariante(id: number): Promise<void> {
     const ok = await this.confirm.confirmar('¿Eliminar esta imagen de la variante?');

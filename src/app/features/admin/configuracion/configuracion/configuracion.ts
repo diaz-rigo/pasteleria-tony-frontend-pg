@@ -2,10 +2,11 @@ import { Component, effect, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { ConfiguracionStore } from '../../../../store/configuracion/configuracion.store';
 import { Configuracion } from '../../../../models/configuracion.model';
+import { LucideSave, LucideUndo2 } from '@lucide/angular';
 
 @Component({
   selector: 'app-configuracion',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LucideSave, LucideUndo2],
   templateUrl: './configuracion.html',
   styleUrl: './configuracion.css',
 })

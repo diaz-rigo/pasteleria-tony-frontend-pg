@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Categoria } from '../../../../models/categoria.model';
+import { LucideSave, LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'app-categoria-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LucideSave, LucideX],
   templateUrl: './categoria-form.html',
   styleUrl: './categoria-form.css',
 })

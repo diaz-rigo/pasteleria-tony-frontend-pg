@@ -3,10 +3,11 @@ import { CategoriasStore } from '../../../../store/categorias/categorias.store';
 import { CategoriaList } from '../categoria-list/categoria-list';
 import { CategoriaForm } from '../categoria-form/categoria-form';
 import { Categoria } from '../../../../models/categoria.model';
+import { LucideAlertTriangle, LucidePlus, LucideRefreshCw, LucideTags, LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'app-categorias',
-  imports: [CategoriaList, CategoriaForm],
+  imports: [CategoriaList, CategoriaForm, LucideAlertTriangle, LucidePlus, LucideRefreshCw, LucideTags, LucideX],
   templateUrl: './categorias.html',
   styleUrl: './categorias.css',
 })

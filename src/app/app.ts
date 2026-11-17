@@ -1,5 +1,6 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { LucideAlertTriangle, LucideCheck, LucideInfo, LucideX } from '@lucide/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs';
 import { ToastService } from './shared/components/toast/toast.service';
@@ -10,7 +11,7 @@ import { ThemeService } from './core/theme/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header],
+  imports: [RouterOutlet, Header, LucideAlertTriangle, LucideCheck, LucideInfo, LucideX],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Usuario } from '../../../../models/usuario.model';
+import { LucideLoader2, LucidePencil, LucideTrash2, LucideUsers } from '@lucide/angular';
 
 @Component({
   selector: 'app-usuario-list',
-  imports: [],
+  imports: [LucideLoader2, LucidePencil, LucideTrash2, LucideUsers],
   templateUrl: './usuario-list.html',
   styleUrl: './usuario-list.css',
 })

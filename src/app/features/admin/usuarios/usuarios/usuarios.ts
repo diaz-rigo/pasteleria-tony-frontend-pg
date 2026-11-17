@@ -3,10 +3,11 @@ import { UsuariosStore } from '../../../../store/usuarios/usuarios.store';
 import { UsuarioList } from '../usuario-list/usuario-list';
 import { UsuarioForm } from '../usuario-form/usuario-form';
 import { Usuario } from '../../../../models/usuario.model';
+import { LucideAlertTriangle, LucidePlus, LucideRefreshCw, LucideUsers, LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'app-usuarios',
-  imports: [UsuarioList, UsuarioForm],
+  imports: [UsuarioList, UsuarioForm, LucideAlertTriangle, LucidePlus, LucideRefreshCw, LucideUsers, LucideX],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css',
 })

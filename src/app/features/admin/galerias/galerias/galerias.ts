@@ -3,8 +3,9 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { GaleriasStore } from '../../../../store/galerias/galerias.store';
 import { Galeria } from '../../../../models/galeria.model';
 import { ProductosStore } from '../../../../store/productos/productos.store';
+import { LucideAlertTriangle, LucideImages, LucideLoader2, LucidePencil, LucidePlus, LucideRefreshCw, LucideSave, LucideTrash2, LucideX } from '@lucide/angular';
 
-@Component({ selector:'app-galerias', imports:[FormsModule,ReactiveFormsModule], templateUrl:'./galerias.html', styleUrl:'./galerias.css' })
+@Component({ selector:'app-galerias', imports:[FormsModule,ReactiveFormsModule,LucideAlertTriangle,LucideImages,LucideLoader2,LucidePencil,LucidePlus,LucideRefreshCw,LucideSave,LucideTrash2,LucideX], templateUrl:'./galerias.html', styleUrl:'./galerias.css' })
 export class Galerias implements OnInit {
   readonly store=inject(GaleriasStore);
   readonly productos=inject(ProductosStore);

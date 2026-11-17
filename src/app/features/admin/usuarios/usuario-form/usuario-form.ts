@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Usuario } from '../../../../models/usuario.model';
+import { LucideSave, LucideX } from '@lucide/angular';
 
 @Component({
   selector: 'app-usuario-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LucideSave, LucideX],
   templateUrl: './usuario-form.html',
   styleUrl: './usuario-form.css',
 })
