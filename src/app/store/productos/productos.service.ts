@@ -15,6 +15,9 @@ export class ProductosService {
   listarImagenesVariantes(): Observable<ApiResponse<ImagenVariante[]>> { return this.http.get<ApiResponse<ImagenVariante[]>>(`${environment.apiUrl}/imagenes-variante`); }
   listarTallas(): Observable<ApiResponse<Talla[]>> { return this.http.get<ApiResponse<Talla[]>>(`${environment.apiUrl}/tallas`); }
   listarCalificaciones(): Observable<ApiResponse<Calificacion[]>> { return this.http.get<ApiResponse<Calificacion[]>>(`${environment.apiUrl}/calificaciones`); }
+  firmarSubidaImagen(intProLlave: number): Observable<ApiResponse<{ cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string }>> {
+    return this.http.post<ApiResponse<{ cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string }>>(`${environment.apiUrl}/cloudinary/upload-signature`, { intProLlave });
+  }
   crearVariante(data: Partial<VarianteProducto>): Observable<ApiResponse<VarianteProducto>> { return this.http.post<ApiResponse<VarianteProducto>>(`${environment.apiUrl}/variantes-producto`, data); }
   crearImagenVariante(data: Partial<ImagenVariante>): Observable<ApiResponse<ImagenVariante>> { return this.http.post<ApiResponse<ImagenVariante>>(`${environment.apiUrl}/imagenes-variante`, data); }
   eliminarImagenVariante(id: number): Observable<ApiResponse<unknown>> { return this.http.delete<ApiResponse<unknown>>(`${environment.apiUrl}/imagenes-variante/${id}`); }
