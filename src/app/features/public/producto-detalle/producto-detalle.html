@@ -7,7 +7,7 @@
   @else { @if (producto(); as p) {
     <section class="detail-grid">
       <div>
-        @if (imagenActual(); as photo) { <div class="detail-photo"><img [src]="photo" [alt]="p.nombre"><span class="detail-status" [class.status-unavailable]="p.disponibilidad === 'agotado'">{{ disponibilidad(p.disponibilidad) }}</span>@if (p.destacado) { <span class="detail-featured">✦ Favorito</span> }</div> }
+        @if (imagenActual(); as photo) { <div class="detail-photo"><img [src]="photo" [alt]="p.nombre"><span class="detail-status" [class.status-unavailable]="p.disponibilidad === 'agotado'">{{ disponibilidad(p.disponibilidad) }}</span>@if (p.destacado) { <span class="detail-featured">Favorito</span> }</div> }
         @else { <div class="detail-photo"><div class="detail-placeholder"><span>✿</span><small>{{ p.nombre }}</small></div><span class="detail-status" [class.status-unavailable]="p.disponibilidad === 'agotado'">{{ disponibilidad(p.disponibilidad) }}</span></div> }
         @if(p.fotos.length>1){<div class="mt-3 flex gap-2 overflow-x-auto">@for(foto of p.fotos;track foto.id){<button type="button" (click)="fotoSeleccionada=foto.url" class="h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2" [class.border-accent]="imagenActual()===foto.url"><img [src]="foto.url" [alt]="'Foto de '+p.nombre" class="h-full w-full object-cover"></button>}</div>}
       </div>

@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { LucideAlertTriangle, LucideCheck, LucideInfo, LucideX } from '@lucide/angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs';
@@ -11,7 +11,7 @@ import { ThemeService } from './core/theme/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, LucideAlertTriangle, LucideCheck, LucideInfo, LucideX],
+  imports: [RouterOutlet, RouterLink, Header, LucideAlertTriangle, LucideCheck, LucideInfo, LucideX],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -33,4 +33,29 @@ export class App implements OnInit {
   });
   ngOnInit(): void { this.config.cargar(); }
   get footerText(): string { return this.config.config()?.strCfgTextoPie || ''; }
+  get footerForeground(): string | null {
+    const fondo = this.config.config()?.strCfgColorFondoPie?.trim();
+    if (!fondo) return null;
+    const rgb = this.rgbDesdeColor(fondo);
+    if (!rgb) return null;
+    const luminancia = rgb.map(componente => {
+      const lineal = componente / 255;
+      return lineal <= .04045 ? lineal / 12.92 : ((lineal + .055) / 1.055) ** 2.4;
+    }).reduce((suma, componente, indice) => suma + componente * [.2126, .7152, .0722][indice], 0);
+    const contraste = (luz: number) => (Math.max(luminancia, luz) + .05) / (Math.min(luminancia, luz) + .05);
+    const contrasteBlanco = contraste(1);
+    const contrasteOscuro = contraste(.02);
+    return contrasteBlanco >= contrasteOscuro ? '#ffffff' : '#30251f';
+  }
+
+  private rgbDesdeColor(color: string): [number, number, number] | null {
+    const hexadecimal = color.match(/^#([\da-f]{3}|[\da-f]{6})$/i)?.[1];
+    if (hexadecimal) {
+      const expandido = hexadecimal.length === 3 ? [...hexadecimal].map(digito => digito + digito).join('') : hexadecimal;
+      return [0, 2, 4].map(indice => Number.parseInt(expandido.slice(indice, indice + 2), 16)) as [number, number, number];
+    }
+    const rgb = color.match(/^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
+    if (!rgb) return null;
+    return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])].map(componente => Math.min(255, componente)) as [number, number, number];
+  }
 }

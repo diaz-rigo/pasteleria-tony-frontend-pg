@@ -1,0 +1,7 @@
+<div class="image-picker" [class.image-picker-filled]="vistaPrevia" [class.image-picker-disabled]="deshabilitado">
+  @if(vistaPrevia){<div class="image-picker-preview"><img [src]="vistaPrevia" [alt]="'Vista previa de '+nombre"><div class="image-picker-overlay"><span>{{archivo?.name || 'Imagen actual'}}</span></div></div>}
+  @else{<div class="image-picker-empty"><span class="image-picker-icon"><svg lucideImagePlus [size]="20"></svg></span><strong>Agrega {{nombre}}</strong><small>JPG, PNG o WEBP · Hasta 10 MB</small></div>}
+  <div class="image-picker-actions"><label [for]="idEntrada" class="image-picker-button"><svg lucideUpload [size]="15"></svg>{{vistaPrevia?'Cambiar imagen':'Elegir imagen'}}</label>@if(vistaPrevia){<button type="button" class="image-picker-remove" (click)="quitar()" [disabled]="deshabilitado"><svg lucideTrash2 [size]="15"></svg><span>Quitar</span></button>}</div>
+  <input [id]="idEntrada" type="file" accept="image/jpeg,image/png,image/webp" (change)="seleccionar($event)" [disabled]="deshabilitado" class="sr-only">
+  @if(error){<p class="image-picker-error" role="alert">{{error}}</p>}
+</div>

@@ -9,12 +9,11 @@
           @if(config.config()?.blnCfgMostrarBotonHero !== false){<a [routerLink]="heroButtonInternal()?heroButtonUrl():null" [href]="heroButtonInternal()?null:heroButtonUrl()" [target]="heroButtonInternal()?'_self':'_blank'" rel="noopener noreferrer" class="primary-cta">{{ config.config()?.strCfgTextoBotonHero || 'Descubrir el menú' }} <span aria-hidden="true">→</span></a>}
           <a routerLink="/galeria" class="secondary-cta">Conoce nuestro trabajo</a>
         </div>
-        <div class="mt-8 flex items-center gap-3 text-xs text-secondary"><span class="flex -space-x-2"><span class="avatar-dot">✦</span><span class="avatar-dot">♡</span><span class="avatar-dot">✿</span></span><span><strong class="text-primary">Hecho al momento</strong><br>para celebrar contigo</span></div>
+        <div class="mt-8 flex items-center gap-3 text-xs text-secondary"><span class="flex -space-x-2"><span class="avatar-dot">♡</span><span class="avatar-dot">✿</span></span><span><strong class="text-primary">Hecho al momento</strong><br>para celebrar contigo</span></div>
       </div>
       @if(config.config()?.blnCfgMostrarImagenHero !== false){<div class="hero-art order-1 lg:order-2">
         @if(config.config()?.strCfgUrlImagenHero){<img [src]="config.config()?.strCfgUrlImagenHero" [alt]="config.config()?.strCfgNombreNegocio || 'Creación de repostería'" fetchpriority="high" />}@else{<div class="hero-illustration"><span class="hero-cake-icon"><svg lucideCakeSlice [size]="86" [strokeWidth]="1.15"></svg></span><div class="hero-illustration-copy"><span>Hecho con cariño</span><strong>Un sabor para recordar</strong></div></div>}
-        <div class="photo-note"><span class="note-icon">✦</span><span><strong>Momentos para saborear</strong><small>Una receta para cada ocasión</small></span></div>
-        <span class="art-sparkle sparkle-one">✳</span><span class="art-sparkle sparkle-two">✦</span>
+        <div class="photo-note"><span><strong>Momentos para saborear</strong><small>Una receta para cada ocasión</small></span></div>
       </div>}
     </div>
   </section>
