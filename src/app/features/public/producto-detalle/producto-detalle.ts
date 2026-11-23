@@ -33,11 +33,11 @@ export class ProductoDetalle implements OnInit {
   whatsappUrl(nombre: string): string | null {
     let phone = this.telefono()?.replace(/\D/g, '') || '';
     if (phone.length === 10) phone = `52${phone}`;
-    const mensaje = `Hola, me interesa ${nombre}. ¿Me pueden compartir las presentaciones disponibles, el precio y la disponibilidad?\n\nVi este producto en su catálogo: ${this.urlCompartirProducto()}`;
+    const mensaje = `Hola, me interesa ${nombre}. ¿Me pueden compartir las presentaciones disponibles, el precio y la disponibilidad?\n\nVi este producto en su catálogo: ${this.urlProductoActual()}`;
     return phone ? `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}` : null;
   }
-  private urlCompartirProducto(): string {
-    const ruta = this.router.serializeUrl(this.router.createUrlTree(['/compartir/producto', this.productId()]));
+  private urlProductoActual(): string {
+    const ruta = this.router.serializeUrl(this.router.createUrlTree(['/producto', this.productId()]));
     return new URL(ruta, this.document.location?.origin || this.document.baseURI).toString();
   }
 }
