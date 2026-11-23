@@ -1,13 +1,14 @@
 import { CurrencyPipe, DecimalPipe, DOCUMENT } from '@angular/common';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { LucideMessageCircle } from '@lucide/angular';
 import { ConfiguracionStore } from '../../../store/configuracion/configuracion.store';
 import { ProductosStore } from '../../../store/productos/productos.store';
 import { CloudinaryImagePipe } from '../../../shared/pipes/cloudinary-image.pipe';
 import { Producto } from '../../../models/producto.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-producto-detalle',
@@ -19,7 +20,6 @@ export class ProductoDetalle implements OnInit {
   readonly store = inject(ProductosStore);
   readonly config = inject(ConfiguracionStore);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
   private readonly productId = toSignal(this.route.paramMap.pipe(map(params => Number(params.get('id')))), { initialValue: Number(this.route.snapshot.paramMap.get('id')) });
   readonly producto = computed(() => this.store.productos().find(p => p.id === this.productId()) || null);
@@ -33,11 +33,8 @@ export class ProductoDetalle implements OnInit {
   whatsappUrl(nombre: string): string | null {
     let phone = this.telefono()?.replace(/\D/g, '') || '';
     if (phone.length === 10) phone = `52${phone}`;
-    const mensaje = `Hola, me interesa ${nombre}. ¿Me pueden compartir las presentaciones disponibles, el precio y la disponibilidad?\n\nVi este producto en su catálogo: ${this.urlProductoActual()}`;
+    const mensaje = `Hola, me interesa ${nombre}. ¿Me pueden compartir las presentaciones disponibles, el precio y la disponibilidad?\n\nVi este producto en su catálogo: ${this.urlCompartirProducto()}`;
     return phone ? `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}` : null;
   }
-  private urlProductoActual(): string {
-    const ruta = this.router.serializeUrl(this.router.createUrlTree(['/producto', this.productId()]));
-    return new URL(ruta, this.document.location?.origin || this.document.baseURI).toString();
-  }
+  private urlCompartirProducto(): string { return `${environment.apiUrl}/productos/share/${this.productId()}?modo=contacto`; }
 }
