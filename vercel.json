@@ -2,6 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
+      "source": "/compartir/producto/:id",
+      "destination": "/api/product-preview?id=:id"
+    },
+    {
       "source": "/producto/:id",
       "has": [
         {
